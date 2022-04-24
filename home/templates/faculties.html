@@ -1,0 +1,134 @@
+{% load static %}
+
+<header>
+    <link rel="stylesheet" href="{% static '/home/css/faculties.css' %}" type="text/css">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</header>
+<!------ Include the above in your HEAD tag ---------->
+
+<!-- details card section starts from here -->
+<body>
+    {% comment %}  {% endcomment %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'home'%}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'faculties' %}">Faculties</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="">Students</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'register' %}">Register</a>
+            </li>
+            </ul >
+            
+        </div>
+    </nav>
+{% comment %} filter {% endcomment %}
+
+
+<section class="details-card">
+    {% comment %} faculty cards {% endcomment %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card-content">
+                    <div class="card-img">
+                        <img src="{% static '/home/images/f1.jpg' %}" alt="" style="width: 350px; height: 280px;">
+                        <span><h4>Faculty1</h4></span>
+                    </div>
+                    <div class="card-desc">
+                        <h3>Heading</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                            voluptas totam</p>
+                            <a href="#" class="btn-card">More</a>   
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-content">
+                    <div class="card-img">
+                        <img src="{% static '/home/images/f4.jpg' %}" alt="" style="width: 350px; height: 280px;">
+                        <span><h4>Faculty2</h4></span>
+                    </div>
+                    <div class="card-desc">
+                        <h3>Heading2</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                            voluptas totam</p>
+                            <a href="#" class="btn-card">More</a>   
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-content">
+                    <div class="card-img">
+                        <img src="{% static '/home/images/f3.jpg' %}" alt="" style="width: 350px; height: 280px;">
+                        <span><h4>Faculty3</h4></span>
+                    </div>
+                    <div class="card-desc">
+                        <h3>Heading3</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                            voluptas totam</p>
+                            <a href="#" class="btn-card">More</a>   
+                    </div>
+                </div>
+            </div>
+        </div>
+<br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card-content">
+                    <div class="card-img">
+                        <img src="{% static '/home/images/f5.jpg' %}" alt="" style="width: 350px; height: 280px;">
+                        <span><h4>Faculty4</h4></span>
+                    </div>
+                    <div class="card-desc">
+                        <h3>Heading4</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                            voluptas totam</p>
+                            <a href="#" class="btn-card">More</a>   
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-content">
+                    <div class="card-img">
+                        <img src="{% static '/home/images/f6.jpg' %}" alt="" style="width: 350px; height: 280px;">
+                        <span><h4>Faculty6</h4></span>
+                    </div>
+                    <div class="card-desc">
+                        <h3>Heading5</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                            voluptas totam</p>
+                            <a href="#" class="btn-card">More</a>   
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-content">
+                    <div class="card-img">
+                        <img src="{% static '/home/images/f7.jpg' %}" alt="" style="width: 350px; height: 280px;">
+                        <span><h4>Faculty6</h4></span>
+                    </div>
+                    <div class="card-desc">
+                        <h3>Heading6</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                            voluptas totam</p>
+                            <a href="#" class="btn-card">More</a>   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- details card section starts from here -->
+</body>
