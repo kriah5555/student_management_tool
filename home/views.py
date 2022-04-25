@@ -30,6 +30,17 @@ class RegisterPage(TemplateView):
         context['image'] = 'regidter.jpg'
         return context
 
-        FacultiesPage
 class FacultiesPage(TemplateView):
     template_name = "faculties.html"
+
+class StudentList(TemplateView):
+    template_name = "students.html"
+
+class StudentLis1t1(TemplateView):
+    template_name = "students1.html"
+
+class StudentAttendence(TemplateView):
+    template_name = "student_attendence.html"
+
+class StudentDetails(TemplateView):
+    template_name = "student_details.html"
