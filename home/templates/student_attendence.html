@@ -1,0 +1,279 @@
+
+{% load static %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="{% static '/home/css/students_attendence.css' %}" type="text/css">
+
+<!------ Include the above in your HEAD tag ---------->
+<a class="navbar-brand" href="{% url 'home'%}">Home</a>
+
+
+
+
+
+
+
+
+<div class="container">
+	<div class="row">
+		<section class="content">
+			<h1>Student attendence</h1>
+            
+
+
+            <div class="container">
+                <div class="row">
+                    <div id="filter-panel" class="filter-panel">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <label class="filter-col" style="margin-right:0;" for="pref-orderby">Subject:</label>
+                                        <select id="pref-orderby" class="form-control">
+                                            <option>--select--</option>
+                                            <option>Science</option>
+                                            <option>BEEE</option>
+                                            <option>M2</option>
+                                            <option>M2</option>
+                                        </select>                                
+                                    </div> <!-- form group [order by] --> 
+                                    <div class="form-group">    
+                                        <div class="checkbox" style="margin-left:10px; margin-right:10px;">
+                                            <label for="birthday">Date:</label>
+                                            <input type="date" id="birthday" name="birthday">
+                                            <label for="birthday">Start time:</label>
+                                            <input type="time" id="birthday" name="birthday">
+                                            <label for="birthday">End time:</label>
+                                            <input type="time" id="birthday" name="birthday">
+                                        </div>
+                                        <button type="submit" class="btn btn-default filter-col">
+                                            <span class="glyphicon glyphicon-record"></span> Save Attendence
+                                        </button>  
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+
+
+
+			<div class="col-md-8 col-md-offset-2">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="pull-right">
+							<div class="btn-group">
+								
+							</div>
+						</div>
+						<div class="table-container">
+							<table class="table table-filter">
+								<tbody>
+									<tr data-status="pagado">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox1">
+												<label for="checkbox1"></label>
+											</div>
+										</td>
+										<td>
+											</a>
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s1.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 1
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr data-status="pendiente">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox3">
+												<label for="checkbox3"></label>
+											</div>
+										</td>
+										<td>
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s2.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 2
+														<span class="pull-right pendiente">(Pendiente)</span>
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr data-status="cancelado">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox2">
+												<label for="checkbox2"></label>
+											</div>
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s3.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 3
+														<span class="pull-right cancelado">(Cancelado)</span>
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr data-status="pendiente">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox5">
+												<label for="checkbox5"></label>
+											</div>
+										</td>
+										<td>
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s4.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 4
+														<span class="pull-right pendiente">(Pendiente)</span>
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+                                    <tr data-status="pagado">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox1">
+												<label for="checkbox1"></label>
+											</div>
+										</td>
+										<td>
+											</a>
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s1.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 1
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr data-status="pendiente">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox3">
+												<label for="checkbox3"></label>
+											</div>
+										</td>
+										<td>
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s2.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 2
+														<span class="pull-right pendiente">(Pendiente)</span>
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr data-status="cancelado">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox2">
+												<label for="checkbox2"></label>
+											</div>
+										</td>
+										<td>
+											
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s3.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 3
+														<span class="pull-right cancelado">(Cancelado)</span>
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr data-status="pendiente">
+										<td>
+											<div class="ckbox">
+												<input type="checkbox" id="checkbox5">
+												<label for="checkbox5"></label>
+											</div>
+										</td>
+										<td>
+										</td>
+										<td>
+											<div class="media">
+												<a href="#" class="pull-left">
+													<img src="{% static '/home/images/s4.jpg' %}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+												</a>
+												<div class="media-body">
+													<span class="media-meta pull-right">Febrero 13, 2016</span>
+													<h4 class="title">
+														Student 4
+														<span class="pull-right pendiente">(Pendiente)</span>
+													</h4>
+												</div>
+											</div>
+										</td>
+									</tr>
+                                    
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+	</div>
+</div>
