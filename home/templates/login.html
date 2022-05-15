@@ -29,6 +29,15 @@
     <link rel="stylesheet" href="{% static '/home/css/login.css' %}" type="text/css">
 </head>
 <body style="background-image: url({% static '/home/images/' %}{{ image }})">
+    <form method = 'POST' action='{% url "login_admin" %}'> {% csrf_token %}
+        {% comment %} validation errors {% endcomment %}
+        {% if error %}
+                <div class="feedback bg-light text-danger w-100 text-center">
+                    <h2>
+                    {{ error }}
+                    </h2>
+                </div>
+        {% endif %}
 <!-- Page Content -->
 <div class="container">
     <div class="row" style="padding-right:90px">
@@ -37,13 +46,14 @@
               <div class="form-login"></br>
                 <h4>{{ form }} login</h4>
                 </br>
-                <input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username"/>
+                <input type="text" name="username" class="form-control input-sm chat-input" placeholder="username" requered/>
                 </br></br>
-                <input type="text" id="userPassword" class="form-control input-sm chat-input" placeholder="password"/>
+                <input type="text" name="password" class="form-control input-sm chat-input" placeholder="password" requered/>
                 </br></br>
                 <div class="wrapper">
                         <span class="group-btn">
-                            <a href="#" class="btn btn-danger btn-md">login<i class="fa fa-sign-in"></i></a>
+                            <input type="submit" class="btn btn-danger btn-md" value='Login'>
+                            {% comment %} login<i class="fa fa-sign-in"></i> {% endcomment %}
                         </span>
                         <br>
                         <span class="group-btn">
@@ -60,5 +70,6 @@
     </div>
     <!--//footer-->
 </div>
+</form>
 </body>
 </html>
