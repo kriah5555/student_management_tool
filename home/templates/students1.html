@@ -6,7 +6,39 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css"/>
-<a class="navbar-brand" href="{% url 'home'%}">Home</a>
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+</style>
+
+<ul>
+  <li><a class="active" href="{% url 'home' %}">Home</a></li>
+  <li><a href="{% url 'register_student' %}">Add student</a></li>
+</ul>
+
+
+
 
 <div class="container">
   <div class="well">
@@ -21,24 +53,10 @@
             Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis 
             dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. 
             Aliquam in felis sit amet augue.</p>
-          <ul class="list-inline list-unstyled">
-            <span><i class="glyphicon glyphicon-comment"></i> 2 Feedbacs</span>
-            <li>|</li>
-            <li>
-               <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-            </li>
-            <li>|</li>
-            <li>
-            <!-- Use Font Awesome http://fortawesome.github.io/Font-Awesome/ -->
-              <span><i class="fa fa-facebook-square"></i></span>
-              <span><i class="fa fa-twitter-square"></i></span>
-              <span><i class="fa fa-google-plus-square"></i></span>
-            </li>
-			</ul>
+          {% comment %} <ul class="list-inline list-unstyled"> {% endcomment %}
+            <a href="" class="btn-card">Edit</a>   
+            {% comment %} <a href="{% url 'delete_faculty' faculty.pk %}" class="btn-card">Delete</a>   {% endcomment %}
+			{% comment %} </ul> {% endcomment %}
        </div>
     </div>
   </div>

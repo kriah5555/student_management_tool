@@ -30,7 +30,6 @@
                     </form>
                 </li>
             </ul>
-            
         </div>
     </nav>
 {% comment %} filter {% endcomment %}
@@ -40,21 +39,30 @@
     {% comment %} faculty cards {% endcomment %}
     <div class="container">
         <div class="row">
+            {% for faculty in object_list %}
             <div class="col-md-4">
                 <div class="card-content">
                     <div class="card-img">
-                        <img src="{% static '/home/images/f1.jpg' %}" alt="" style="width: 350px; height: 280px;">
-                        <span><h4>Faculty1</h4></span>
+                        {% if faculty.avatars %}
+                            <img src="{{ faculty.avatars.url }}" alt="" style="width: 350px; height: 280px;">
+                        {% else %} 
+                            <img src="/media/faculties/default_faculty.jpg" alt="" style="width: 350px; height: 280px;">
+                        {% endif %}
+                        <span><h4>{{ faculty.first_name }}</h4></span>
                     </div>
                     <div class="card-desc">
-                        <h3>Heading</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
+                        <h3>{{ faculty.first_name }}</h3>
+                        <p> {{forloop.counter}}Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
                             voluptas totam</p>
-                            <a href="#" class="btn-card">More</a>   
+                            {% comment %} <a href="{% url 'update_faculty' faculty.pk %}" class="btn-card">More</a>    {% endcomment %}
+                            <a href="{% url 'update_faculty' faculty.pk %}" class="btn-card">Edit</a>   
+                            <a href="{% url 'delete_faculty' faculty.pk %}" class="btn-card">Delete</a>   
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            {% endfor %}
+
+            {% comment %} <div class="col-md-4">
                 <div class="card-content">
                     <div class="card-img">
                         <img src="{% static '/home/images/f4.jpg' %}" alt="" style="width: 350px; height: 280px;">
@@ -67,8 +75,8 @@
                             <a href="#" class="btn-card">More</a>   
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
+            </div> {% endcomment %}
+            {% comment %} <div class="col-md-4">
                 <div class="card-content">
                     <div class="card-img">
                         <img src="{% static '/home/images/f3.jpg' %}" alt="" style="width: 350px; height: 280px;">
@@ -81,9 +89,12 @@
                             <a href="#" class="btn-card">More</a>   
                     </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
         </div>
-<br>
+{% comment %} <br>
+
+
+
         <div class="row">
             <div class="col-md-4">
                 <div class="card-content">
@@ -128,7 +139,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 </section>
 <!-- details card section starts from here -->
 </body>

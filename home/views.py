@@ -1,11 +1,11 @@
 from dataclasses import field
+from tempfile import tempdir
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, DetailView, CreateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth import authenticate
 from .models import *
 from django.contrib import messages
-from .serializer import *
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 
 user = object()
 # class LoginPage(TemplateView):
@@ -29,21 +29,50 @@ user = object()
 class HomPage(TemplateView):
     template_name = "home.html"
 
-class RegisterPage(CreateView):
+class RegisterStudentPage(CreateView):
     template_name = "register.html"
     # success_url = reverse_lazy("faculties")
-    model = Faculty
+    model = Student
     fields = '__all__'
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['image'] = 'regidter.jpg'
-    #     return context
         
-    def get_queryset(self):
-        return super().get_queryset()
+    # def get_queryset(self):
+    #     return super().get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header"] = 'Register'
+        context["button"] = 'Register'
+        context["background"] = '/static/home/images/register_stugent1.jpg'
+        return context
+    
 
-class FacultiesPage(TemplateView):
+class UpdateStudent(UpdateView):
+    template_name = "register.html"
+    model = Student
+    fields = ('first_name', 'last_name', 'avatars', 'email', 'gender', 'branch')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header"] = "Update"
+        context["button"] = "Update"
+        context["background"] = '/static/home/images/register_stugent1.jpg'
+        return context
+    
+
+class DeleteStudent(DeleteView):
+    template_name = "register.html"
+    model = Student
+    success_url = reverse_lazy('faculties')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header"] = 'Are u shore you want to delete!'
+        context["button"] = 'Delete'
+        context["background"] = '/static/home/images/register_stugent1.jpg'
+        return context
+    
+
+class FacultiesPage(ListView):
+    model = Faculty
     template_name = "faculties.html"
 
 class StudentList(TemplateView):
@@ -57,6 +86,52 @@ class StudentAttendence(TemplateView):
 
 class StudentDetails(TemplateView):
     template_name = "student_details.html"
+
+
+
+class RegisterPage(CreateView):
+    template_name = "register.html"
+    # success_url = reverse_lazy("faculties")
+    model = Faculty
+    fields = '__all__'
+        
+    # def get_queryset(self):
+    #     return super().get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header"] = 'Register'
+        context["button"] = 'Register'
+        context["background"] = '/static/home/images/regidter.jpg'
+        return context
+    
+
+class UpdateFaculty(UpdateView):
+    template_name = "register.html"
+    model = Faculty
+    fields = ('first_name', 'last_name', 'avatars', 'email', 'gender', 'branch')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header"] = "Update"
+        context["button"] = "Update"
+        context["background"] = '/static/home/images/regidter.jpg'
+        return context
+    
+
+class DeleteFaculty(DeleteView):
+    template_name = "register.html"
+    model = Faculty
+    success_url = reverse_lazy('faculties')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header"] = 'Are u shore you want to delete!'
+        context["button"] = 'Delete'
+        context["background"] = '/static/home/images/regidter.jpg'
+        return context
+
+
+
 
 def login_page(request):
     if (request.path == '/login_admin/'):
