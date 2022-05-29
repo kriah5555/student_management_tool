@@ -75,9 +75,44 @@ class StudentLis1t1(ListView):
 class StudentAttendenceCredentials(TemplateView):
     template_name = "select_attendence_credentials.html"
 
+    def post(self, request, *args, **kwargs):
+        request.session['subject']  = request.POST['subject']
+        request.session['sem']      = request.POST['sem']
+        request.session['branch']   = request.POST['branch']
+        request.session['division'] = request.POST['division']
+        request.session['sdate']    = request.POST['sdate']
+        request.session['stime']    = request.POST['stime']
+        request.session['etime']    = request.POST['etime']
+        return redirect('student_attendenct')
+
 class StudentAttendence(ListView):
-    model = Student
+    model         = Student
     template_name = "student_attendence.html"
+    success_url = reverse_lazy('faculties')
+
+def student_attendence(request):
+
+    
+    if request.method == 'GET':
+        context = {
+            'students' : Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem']),
+            'subject'  : request.session['subject'],
+            'sem'      : request.session['sem'],
+            'branch'   : request.session['branch'],
+            'division' : request.session['division'],
+            'sdate'    : request.session['sdate'],
+            'stime'    : request.session['stime'],
+            'etime'    : request.session['etime'],
+        }
+        return render(request, 'student_attendence.html', context)
+    else:
+        students = Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem']),
+        print(request.POST,'======---------------   ')
+        return redirect('faculties')
+
+
+
+
     
 
 class StudentDetails(DetailView):
