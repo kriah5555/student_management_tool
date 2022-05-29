@@ -43,7 +43,7 @@
     <li><a class="active" href="{% url 'home' %}">Home</a></li>
     {% comment %} <li><a href="{% url 'home' %}">Back</a></li> {% endcomment %}
   </ul>
-<form method="">
+<form method="POST">{% csrf_token %}
 
 	
 	<div class="container">
@@ -55,7 +55,7 @@
 						<div id="filter-panel" class="filter-panel">
 							<div class="panel panel-default">
 								<div class="panel-body">
-									<form class="form-inline" role="form">
+									{% comment %} <form class="form-inline" role="form"> {% endcomment %}
 										<div class="form-group">
 											<label class="filter-col" style="margin-right:0;" for="pref-orderby" >Subject:</label>
 											<input typr="text" class="form-control" name='subject' disabled value="{{ subject }}">                             
@@ -85,7 +85,7 @@
 												<span class="glyphicon glyphicon-record"></span> Proceed to take attendence
 											</button>   {% endcomment %}
 										</div>
-									</form>
+									{% comment %} </form> {% endcomment %}
 								</div>
 							</div>
 						</div>    
@@ -106,7 +106,7 @@
 		<div class="row">
 			<section class="content">
 				<h1>Student attendence</h1>
-				<input type="submit" value="Savea attendence" style="color:blue;margin-left:500px;">
+				<input type="submit" value="Savea attendence" style="color:blue;margin-left:430px;">
 				<div class="container">
 				<div class="col-md-8 col-md-offset-2">
 					<div class="panel panel-default">
@@ -136,7 +136,7 @@
 															<img src="{{ student.avatars.url }}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
 														</a>
 														<div class="media-body">
-															<span class="media-meta pull-right">Febrero 13, 2016</span>
+															<span class="media-meta pull-right">{{ student.student_usn }}</span>
 															<h4 class="title">
 																Student 1
 															</h4>

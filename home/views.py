@@ -91,8 +91,6 @@ class StudentAttendence(ListView):
     success_url = reverse_lazy('faculties')
 
 def student_attendence(request):
-
-    
     if request.method == 'GET':
         context = {
             'students' : Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem']),
@@ -106,7 +104,11 @@ def student_attendence(request):
         }
         return render(request, 'student_attendence.html', context)
     else:
-        students = Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem']),
+        students   = Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'])
+        # attendence = StudentAttendences.objects.create()
+        for stu in students:
+            print(stu.student_usn,'------------///////////')
+
         print(request.POST,'======---------------   ')
         return redirect('faculties')
 
