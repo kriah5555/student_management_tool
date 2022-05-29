@@ -1,4 +1,5 @@
 from dataclasses import field
+from pickle import TRUE
 from tempfile import tempdir
 from webbrowser import get
 from django.shortcuts import render, redirect
@@ -161,13 +162,14 @@ def create_user(request, pk):
             template_name = 'create_user.html'
             return render(request, template_name, context)
         else:
-            faculty = Faculty.objects.get(pk = request.POST['faculty'])
+            faculty = Faculty.objects.get(pk = request.POST['faculty'], status = 0)
             username = request.POST['username']
             password = request.POST['pwd']
             email    = faculty.email
             if faculty and username and password:
                 user = User.objects.create_user(first_name = 'faculty', last_name = faculty.pk, username = username, password = password, email = email)
                 user.save()
+                faculty.status = TRUE
             elif not username:
                 messages.success(request, 'Please enter username')
             elif not password:
