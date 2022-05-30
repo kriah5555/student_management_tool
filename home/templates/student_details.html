@@ -9,8 +9,10 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+    {% comment %} <a class="navbar-brand" href="{% url 'home' %}">Home</a> {% endcomment %}
     <a class="navbar-brand" href="{% url 'students1' %}">Back</a>
+    <a class="nav-link active" href="{% url 'logout' %}" >Logout</a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -52,7 +54,10 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="{% url 'update_student' student.pk %}" class="btn-card" title="Click to edit">Edit</a>   
+                        <a href="{% url 'update_student' student.pk %}" class="btn-card" title="Click to edit">Edit</a> 
+                        {% if not student.status %}
+                            <a href="{% url 'create_student_user' student.pk %}" class="btn-card" title="Click to edit">| Create username</a>   
+                        {% endif %}  
 
                         {% comment %} <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/> {% endcomment %}
                     </div>
@@ -174,38 +179,38 @@
                         <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">English</div>
-                                <div class="col-5 text-right">40%</div>
+                                <div class="col-5 text-right">0%</div>
                             </div>
                         </div>
                         <div class="custom-progress progress">
-                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:40%" class="animated custom-bar progress-bar slideInLeft bg-sky"></div>
+                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-sky"></div>
                         </div>
                         <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">M1</div>
-                                <div class="col-5 text-right">50%</div>
+                                <div class="col-5 text-right">0%</div>
                             </div>
                         </div>
                         <div class="custom-progress progress">
-                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:50%" class="animated custom-bar progress-bar slideInLeft bg-orange"></div>
+                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-orange"></div>
                         </div>
                         <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">M2</div>
-                                <div class="col-5 text-right">60%</div>
+                                <div class="col-5 text-right">0%</div>
                             </div>
                         </div>
                         <div class="custom-progress progress">
-                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:60%" class="animated custom-bar progress-bar slideInLeft bg-green"></div>
+                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-green"></div>
                         </div>
                         <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">BEEE</div>
-                                <div class="col-5 text-right">80%</div>
+                                <div class="col-5 text-right">0%</div>
                             </div>  
                         </div>
                         <div class="custom-progress progress">
-                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:80%" class="animated custom-bar progress-bar slideInLeft bg-yellow"></div>
+                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-yellow"></div>
                         </div>
                     </div>
 

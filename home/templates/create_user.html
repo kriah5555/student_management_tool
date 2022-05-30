@@ -94,9 +94,9 @@ li a:hover {
 </head>
 <body>
   <ul>
-    <li><a class="active" href="{% url 'home' %}">Home</a></li>
+    {% comment %} <li><a class="active" href="{% url 'home' %}">Home</a></li> {% endcomment %}
     <li><a href="{% url 'faculties' %}">Back</a></li>
-    <a class="nav-link active" href="{% url 'logout' %}" style="margin-left: 1080px;">Logout</a>
+    <li><a class="nav-link active" href="{% url 'logout' %}" >Logout</a></li>
 
   </ul>
   
@@ -111,9 +111,9 @@ li a:hover {
       <label for="faculty">Choose faculty:</label>
 
       <select name="faculty" id="faculty" style="    width: 50%;height: 38px;">
-        {% for faculty in obj  %}
-        <option value="{{ faculty.pk }}">{{ faculty.first_name }} {{faculty.last_name  }}</option>
-        {% endfor %}
+        {% comment %} {% for faculty in obj  %} {% endcomment %}
+        <option value="{{ obj.pk }}">{{ obj.first_name }} {{obj.last_name  }}</option>
+        {% comment %} {% endfor %} {% endcomment %}
       </select>
 
       <br>

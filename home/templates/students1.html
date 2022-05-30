@@ -1,3 +1,4 @@
+{% comment %} {% extends "acess_denied.html" %} {% endcomment %}
 {% load static %}
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -34,8 +35,14 @@ li a:hover {
 
 <body style="background-image:url({% static '/home/images/student_list_background.jpg' %})">
   <ul>
-    <li><a class="active" href="{% url 'home' %}">Home</a></li>
+    {% comment %} <li><a class="active" href="{% url 'home' %}">Home</a></li> {% endcomment %}
     <li><a href="{% url 'register_student' %}">Add student</a></li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{% url 'Student_attendence_credentials' %}">Attendence</a>
+  ` </li>
+    <li>
+      <a class="nav-link active" href="{% url 'logout' %}" >Logout</a>
+    </li>
   </ul>
 
 

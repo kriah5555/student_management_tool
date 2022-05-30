@@ -9,7 +9,7 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+    {% comment %} <a class="navbar-brand" href="{% url 'home' %}">Home</a> {% endcomment %}
     <a class="navbar-brand" href="{% url 'faculties' %}">Back</a>
     <a class="nav-link active" href="{% url 'logout' %}" style="margin-left: 994px;">Logout</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +17,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-        </ul >
+        </ul>
         
     </div>
 </nav>
@@ -43,7 +43,7 @@
                     <div class="col-md-2">
                         <a href="{% url 'update_faculty' faculty.pk %}" class="btn-card" title="Click to edit">Edit</a>   
                         {% if not faculty.status %}
-                            <a href="{% url 'create_faculty_user' faculty.pk %}" class="btn-card" title="Click to edit">| Create usetname</a>   
+                            <a href="{% url 'create_faculty_user' faculty.pk %}" class="btn-card" title="Click to edit">| Create username</a>   
                         {% endif %}
 
                         {% comment %} <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/> {% endcomment %}

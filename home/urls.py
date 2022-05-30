@@ -26,6 +26,7 @@ urlpatterns = [
     path('student_details/<int:pk>', login_required(StudentDetails.as_view()), name = 'student_details'),
     path('facultyt_details/<int:pk>', login_required(FacultytDetails.as_view()), name = 'facultyt_details'),
     path('create_faculty_user/<int:pk>', login_required(create_user), name = 'create_faculty_user'),
+    path('create_student_user/<int:pk>', login_required(create_user), name = 'create_student_user'),
     path('logout/', v.lgout, name = 'logout'),
 ]
 

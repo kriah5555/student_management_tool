@@ -135,3 +135,13 @@ STATICFILES_DIRS =[
 ]
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = '/'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# EMAIL_HOST = 'localhost'
+# EMAIl_PORT = '1025'
+# EMAIL_HOST_USER = ''
+# EMIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = False
+# EMAIL_SUE_SSL = False
+# to send mail run this : python -m smtpd -n -c DebuggingServer localhost:1025

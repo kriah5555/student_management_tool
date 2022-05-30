@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{% static '/home/css/login.css' %}" type="text/css">
 </head>
 <body style="background-image: url({% static '/home/images/' %}{{ image }})">
-    <form method = 'POST' action='{% url "login_admin" %}'> {% csrf_token %}
+    <form method = 'POST' action=''> {% csrf_token %}
         {% comment %} validation errors {% endcomment %}
         {% if error %}
                 <div class="feedback bg-light text-danger w-100 text-center">
@@ -48,7 +48,7 @@
                 </br>
                 <input type="text" name="username" class="form-control input-sm chat-input" placeholder="username" requered/>
                 </br></br>
-                <input type="text" name="password" class="form-control input-sm chat-input" placeholder="password" requered/>
+                <input type="password" name="password" class="form-control input-sm chat-input" placeholder="password" requered/>
                 </br></br>
                 <div class="wrapper">
                         <span class="group-btn">

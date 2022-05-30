@@ -12,11 +12,13 @@ from django.urls import reverse_lazy
 from django.contrib import messages #import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 
 
 class HomPage(TemplateView):
-    template_name = "home.html"
+    template_name = "home1.html"
+    # template_name = "home.html"
 
 class RegisterStudentPage(CreateView):
     template_name = "register.html"
@@ -166,6 +168,13 @@ class DeleteFaculty(DeleteView):
         return context
 
 def login_page(request):
+    # send_mail(
+    # 'Subject here',
+    # 'Here is the message.',
+    # 'ka36l1107@gmail.com',
+    # ['sunilgangadhar.infanion@gmail.com'],
+    # # fail_silently=False,
+    # )
     if (request.path == '/login_admin/'):
         path = 'register1.jpg'
         form = 'Admin'
@@ -179,12 +188,22 @@ def login_page(request):
     if request.method == 'GET':
         template_name = "login.html"
     elif (request.method == 'POST'):
-        
-        user = authenticate(username = request.POST['username'], password = request.POST['password'])
+
+        if (request.path == '/login_admin/'):
+           first_name = ''
+           next       = '/faculties/'
+        elif (request.path == '/login_faculty/'):
+            first_name = 'faculty'
+            next       = '/students1/'
+        elif (request.path == '/login_student/'):
+            first_name = 'student'
+        user = authenticate(username = request.POST['username'], password = request.POST['password'], first_name = first_name)
         if user is not None :
             login(request, user)
-            template_name = "faculties.html"
-            return redirect('/faculties/')
+            print(request.user.last_name,'==============')
+            if  (request.path == '/login_student/'):
+                next = '/student_details/'+request.user.last_name
+            return redirect(next)
         else :
             template_name = "login.html"
             context['error'] = 'Please enter valid username and password'
@@ -195,16 +214,25 @@ def create_user(request, pk):
         if request.method == 'GET':
             if (request.path == f'/create_faculty_user/{pk}'):
                 path = 'create_user.jpg'
-                context = {'image' : path, 'obj' : Faculty.objects.all()}
+                context = {'image' : path, 'obj' : Faculty.objects.get(pk = pk, status = 0)}
+            elif (request.path == f'/create_student_user/{pk}'):
+                path = 'create_user.jpg'
+                context = {'image' : path, 'obj' : Student.objects.get(pk = pk, status = 0)}
             template_name = 'create_user.html'
             return render(request, template_name, context)
         else:
-            faculty = Faculty.objects.get(pk = request.POST['faculty'], status = 0)
+            if (request.path == f'/create_faculty_user/{pk}'):
+                faculty = Faculty.objects.get(pk = pk)
+                email     = faculty.email
+                first_name = 'faculty'
+            elif (request.path == f'/create_student_user/{pk}'):
+                faculty    = Student.objects.get(pk = pk)
+                email      = faculty.email
+                first_anme = 'student'
             username = request.POST['username']
             password = request.POST['pwd']
-            email    = faculty.email
             if faculty and username and password:
-                user = User.objects.create_user(first_name = 'faculty', last_name = faculty.pk, username = username, password = password, email = email)
+                user = User.objects.create_user(first_name = first_anme, last_name = faculty.pk, username = username, password = password, email = email, is_staff = True)
                 user.save()
                 faculty.status = TRUE
             elif not username:
