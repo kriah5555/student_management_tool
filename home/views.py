@@ -55,7 +55,7 @@ class DeleteStudent(DeleteView):
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
-        context["header"]     = 'Are u shore you want to delete!'
+        context["header"]     = 'Are you sure you want to delete!'
         context["button"]     = 'Delete'
         context["background"] = '/static/home/images/register_stugent1.jpg'
         return context
@@ -162,7 +162,7 @@ class DeleteFaculty(DeleteView):
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
-        context["header"]     = 'Are u shore you want to delete!'
+        context["header"]     = 'Are you sure you want to delete!'
         context["button"]     = 'Delete'
         context["background"] = '/static/home/images/regidter.jpg'
         return context
@@ -200,7 +200,6 @@ def login_page(request):
         user = authenticate(username = request.POST['username'], password = request.POST['password'], first_name = first_name)
         if user is not None :
             login(request, user)
-            print(request.user.last_name,'==============')
             if  (request.path == '/login_student/'):
                 next = '/student_details/'+request.user.last_name
             return redirect(next)
@@ -228,11 +227,11 @@ def create_user(request, pk):
             elif (request.path == f'/create_student_user/{pk}'):
                 faculty    = Student.objects.get(pk = pk)
                 email      = faculty.email
-                first_anme = 'student'
+                first_name = 'student'
             username = request.POST['username']
             password = request.POST['pwd']
             if faculty and username and password:
-                user = User.objects.create_user(first_name = first_anme, last_name = faculty.pk, username = username, password = password, email = email, is_staff = True)
+                user = User.objects.create_user(first_name = first_name, last_name = faculty.pk, username = username, password = password, email = email, is_staff = True)
                 user.save()
                 faculty.status = TRUE
             elif not username:
