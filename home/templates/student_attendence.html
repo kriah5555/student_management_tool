@@ -37,10 +37,11 @@
 	</style>
 
 
+{% if request.user.is_staff %} 
 
 
 <ul>
-    <li><a class="active" href="{% url 'home' %}">Home</a></li>
+    <li><a class="active" href="{% url 'students1' %}">Back</a></li>
     {% comment %} <li><a href="{% url 'home' %}">Back</a></li> {% endcomment %}
   </ul>
 <form method="POST">{% csrf_token %}
@@ -55,8 +56,13 @@
 						<div id="filter-panel" class="filter-panel">
 							<div class="panel panel-default">
 								<div class="panel-body">
+									
 									{% comment %} <form class="form-inline" role="form"> {% endcomment %}
-										<div class="form-group">
+										<center>
+										<h4>Subject : <b>{{ subject }}</b>; Sem : <b>{{ sem }}</b>; Branch : <b>{{ branch }}</b>; Division : <b>{{ division }}</b>
+										; Date : <b>{{ sdate }}</b></h4>
+										</center>
+										{% comment %} <div class="form-group">
 											<label class="filter-col" style="margin-right:0;" for="pref-orderby" >Subject:</label>
 											<input typr="text" class="form-control" name='subject' disabled value="{{ subject }}">                             
 										</div>
@@ -75,15 +81,18 @@
 										<div class="form-group">    
 											<div class="checkbox" style="margin-left:10px; margin-right:10px;">
 												<label for="birthday">Date:</label>
-												<input type="date" id="birthday" name="sdate" disabled value={{ sdate }}>
-												<label for="birthday">Start time:</label>
+												<input type="date" id="birthday" name="sdate" disabled value={{ sdate }}> {% endcomment %}
+												{% comment %} <label for="birthday">Start time:</label>
 												<input type="time" id="birthday" name="stime" disabled value={{ stime }}>
 												<label for="birthday">End time:</label>
-												<input type="time" id="birthday" name="etime" disabled value={{ etime }}>
-											</div>
-											{% comment %} <button type="submit" class="btn btn-default filter-col">
-												<span class="glyphicon glyphicon-record"></span> Proceed to take attendence
-											</button>   {% endcomment %}
+												<input type="time" id="birthday" name="etime" disabled value={{ etime }}> {% endcomment %}
+											{% comment %} </div> {% endcomment %}
+											{% if students %}
+											
+											<button type="submit" class="btn btn-default filter-col">
+												<span class="glyphicon glyphicon-record"></span> save attendenct
+											</button>  
+											{% endif %}
 										</div>
 									{% comment %} </form> {% endcomment %}
 								</div>
@@ -105,13 +114,14 @@
 	<div class="container">
 		<div class="row">
 			<section class="content">
-				<h1>Student attendence</h1>
-				<input type="submit" value="Savea attendence" style="color:blue;margin-left:430px;">
+				<h1>Student attendence</h1>	
+				{% comment %} <input type="submit" value="Save attendence" style="color:blue;margin-left:430px;"> {% endcomment %}
 				<div class="container">
 				<div class="col-md-8 col-md-offset-2">
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<div class="table-container">
+								{% if students %}
 								<table class="table table-filter">
 									<tbody>
 										<tr>
@@ -133,7 +143,7 @@
 												<td>
 													<div class="media">
 														<a href="#" class="pull-left">
-															<img src="{{ student.avatars.url }}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+															<img src="{{ student.image.url }}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
 														</a>
 														<div class="media-body">
 															<span class="media-meta pull-right">{{ student.student_usn }}</span>
@@ -148,6 +158,9 @@
 										
 									</tbody>
 								</table>
+								{% else %}
+								No students available 
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -166,3 +179,8 @@
 		}
 	}
 </script>
+
+{% else %}
+Only faculty has acess to this page
+<a class="navbar-brand" href="{% url 'home'%}">Go to home</a>
+{% endif %}

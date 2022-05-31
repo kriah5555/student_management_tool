@@ -23,7 +23,7 @@ class HomPage(TemplateView):
 class RegisterStudentPage(CreateView):
     template_name = "register.html"
     model         = Student
-    fields        = '__all__'
+    fields        = ['student_usn', 'first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'division', 'sem', 'image', ]
         
     # def get_queryset(self):
     #     return super().get_queryset()
@@ -38,7 +38,7 @@ class RegisterStudentPage(CreateView):
 class UpdateStudent(UpdateView):
     template_name = "register.html"
     model         = Student
-    fields        = '__all__'
+    fields        = ['student_usn', 'first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'division', 'sem', 'image', ]
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
@@ -83,8 +83,8 @@ class StudentAttendenceCredentials(TemplateView):
         request.session['branch']   = request.POST['branch']
         request.session['division'] = request.POST['division']
         request.session['sdate']    = request.POST['sdate']
-        request.session['stime']    = request.POST['stime']
-        request.session['etime']    = request.POST['etime']
+        # request.session['stime']    = request.POST['stime']
+        # request.session['etime']    = request.POST['etime']
         return redirect('student_attendenct')
 
 class StudentAttendence(ListView):
@@ -101,8 +101,8 @@ def student_attendence(request):
             'branch'   : request.session['branch'],
             'division' : request.session['division'],
             'sdate'    : request.session['sdate'],
-            'stime'    : request.session['stime'],
-            'etime'    : request.session['etime'],
+            # 'stime'    : request.session['stime'],
+            # 'etime'    : request.session['etime'],
         }
         return render(request, 'student_attendence.html', context)
     else:
@@ -130,7 +130,7 @@ class FacultytDetails(DetailView):
 class RegisterPage(CreateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ['first_name', 'last_name', 'avatars', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch']
+    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image',]
         
     # def get_queryset(self):
     #     return super().get_queryset()
@@ -145,7 +145,7 @@ class RegisterPage(CreateView):
 class UpdateFaculty(UpdateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ('first_name', 'last_name', 'avatars', 'email', 'gender', 'branch')
+    fields        = ('first_name', 'last_name', 'email', 'gender', 'branch', 'image',)
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
@@ -220,28 +220,35 @@ def create_user(request, pk):
             template_name = 'create_user.html'
             return render(request, template_name, context)
         else:
-            if (request.path == f'/create_faculty_user/{pk}'):
-                faculty = Faculty.objects.get(pk = pk)
-                email     = faculty.email
-                first_name = 'faculty'
-            elif (request.path == f'/create_student_user/{pk}'):
-                faculty    = Student.objects.get(pk = pk)
-                email      = faculty.email
-                first_name = 'student'
             username = request.POST['username']
-            password = request.POST['pwd']
-            if faculty and username and password:
-                user = User.objects.create_user(first_name = first_name, last_name = faculty.pk, username = username, password = password, email = email, is_staff = True)
-                user.save()
-                faculty.status = TRUE
-            elif not username:
-                messages.success(request, 'Please enter username')
-            elif not password:
-                messages.success(request, 'Please enter password')
-            elif not faculty:
-                messages.success(request, 'Please select faculty')
-            messages.success(request, 'Profile details updated.')
-            return redirect("/faculties/")
+            if not  User.objects.filter(username=username).exists():
+
+                if (request.path == f'/create_faculty_user/{pk}'):
+                    faculty    = Faculty.objects.get(pk = pk)
+                    email      = faculty.email
+                    first_name = 'faculty'
+                    is_staff   = True
+                elif (request.path == f'/create_student_user/{pk}'):
+                    faculty    = Student.objects.get(pk = pk)
+                    email      = faculty.email
+                    first_name = 'student'
+                    is_staff   = False
+                password = request.POST['pwd']
+                if faculty and username and password:
+                    user = User.objects.create_user(first_name = first_name, last_name = faculty.pk, username = username, password = password, email = email, is_staff = is_staff)
+                    user.save()
+                    faculty.status = TRUE
+                elif not username:
+                    messages.success(request, 'Please enter username')
+                elif not password:
+                    messages.success(request, 'Please enter password')
+                elif not faculty:
+                    messages.success(request, 'Please select faculty')
+                messages.success(request, 'Profile details updated.')
+                return redirect("/faculties/")
+            else:
+                request.session['user_error'] = 'Username already exists'
+                return redirect(f'/create_student_user/{pk}')
     else:
             return redirect("home")
 

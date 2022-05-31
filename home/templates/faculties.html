@@ -10,7 +10,9 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <!-- details card section starts from here -->
-<body>
+{% if request.user.is_superuser %} 
+
+<body stule="background-image: url({% static '/home/images/faculty_background.jpg' %})">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         {% comment %} <a class="navbar-brand" href="{% url 'home'%}">Home</a> {% endcomment %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,19 +51,18 @@
             <div class="col-md-4">
                 <div class="card-content">
                     <div class="card-img">
-                        {% if faculty.avatars %}
+                        {% if faculty.image %}
                             <a href="{% url 'facultyt_details' faculty.pk %}">
-                                <img src="{{ faculty.avatars.url }}" alt="" style="width: 350px; height: 280px;">
+                                <img src="{{ faculty.image.url }}" alt="" style="width: 350px; height: 280px;">
                             </a>
                         {% else %} 
-                            <img src="/media/faculties/default_faculty.jpg" alt="" style="width: 350px; height: 280px;">
+                            <img src="/media/faculties/default_faculty.jpg" alt="" style="width: 290px;height: 176px">
                         {% endif %}
                         <span><h4>{{ faculty.first_name }}</h4></span>
                     </div>
                     <div class="card-desc">
                         <h3>{{ faculty.first_name }}</h3>
-                        <p> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, voluptatum! Dolor quo, perspiciatis
-                            voluptas totam</p>
+                        <p>  {{ faculty.first_name}} {{ faculty.last_name}} is s</p>
                             {% comment %} <a href="{% url 'update_faculty' faculty.pk %}" class="btn-card">More</a>    {% endcomment %}
                             <a href="{% url 'update_faculty' faculty.pk %}" class="btn-card">Edit</a>   
                             <a href="{% url 'delete_faculty' faculty.pk %}" class="btn-card">Delete</a>   
@@ -151,3 +152,8 @@
 </section>
 <!-- details card section starts from here -->
 </body>
+{% else %}
+Only admin has acess to this page!
+please login as admin....
+<a class="navbar-brand" href="{% url 'home'%}">Go to home</a>
+{% endif %}

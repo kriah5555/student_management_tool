@@ -107,7 +107,7 @@ li a:hover {
       <h1>Crate user</h1>
       <p>Please fill belod details to create user</p>
       <hr>
-
+      <h3>{{ request.session.user_error }}</h3>
       <label for="faculty">Choose faculty:</label>
 
       <select name="faculty" id="faculty" style="    width: 50%;height: 38px;">
