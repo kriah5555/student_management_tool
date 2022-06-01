@@ -38,6 +38,7 @@
 
 
 {% if request.user.is_staff %} 
+{%if not config_error %}
 
 
 <ul>
@@ -179,6 +180,10 @@
 		}
 	}
 </script>
+{% else %}
+<a class="navbar-brand" href="{% url 'Student_attendence_credentials'%}">Back</a>
+Attendence for selected date is already Done please select other date.
+{% endif %}
 
 {% else %}
 Only faculty has acess to this page

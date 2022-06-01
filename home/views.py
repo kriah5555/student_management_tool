@@ -13,6 +13,9 @@ from django.contrib import messages #import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from home.blockchain import Blockchain as _blockchain
+
+
 
 
 
@@ -83,8 +86,6 @@ class StudentAttendenceCredentials(TemplateView):
         request.session['branch']   = request.POST['branch']
         request.session['division'] = request.POST['division']
         request.session['sdate']    = request.POST['sdate']
-        # request.session['stime']    = request.POST['stime']
-        # request.session['etime']    = request.POST['etime']
         return redirect('student_attendenct')
 
 class StudentAttendence(ListView):
@@ -94,6 +95,7 @@ class StudentAttendence(ListView):
 
 def student_attendence(request):
     if request.method == 'GET':
+        validate = StudentAttendences.objects.filter (subject = request.session['subject'], sem = request.session['sem'], branch =request.session['branch'], date = request.session['sdate'])
         context = {
             'students' : Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem']),
             'subject'  : request.session['subject'],
@@ -101,13 +103,40 @@ def student_attendence(request):
             'branch'   : request.session['branch'],
             'division' : request.session['division'],
             'sdate'    : request.session['sdate'],
-            # 'stime'    : request.session['stime'],
-            # 'etime'    : request.session['etime'],
+            'config_error' : validate,
         }
         return render(request, 'student_attendence.html', context)
     else:
         students   = Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'])
         # attendence = StudentAttendences.objects.create()
+        for stu in students:
+            print(stu.student_usn,'------------///////////')
+            attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = stu.student_usn in request.POST, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])
+
+        print(request.POST,'======---------------   ')
+
+
+        ## Blockchain
+
+        # if not Blockchain.is_chain_valid():
+        #     print('Block is not valid')
+        # else :
+        #     block = Blockchain.mine_block(data= str(request.POST) )
+        #     print('block ===>',block)
+        #     print("block is valid")
+        #     for stu in students:
+        #         if stu.student_usn in request.POST: 
+        #             status = 1
+        #             pass
+        #         else :
+        #             status = 0
+        #             pass
+        #         attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = status, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])
+       
+            
+            # attendence =StudentAttendenceBlock.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], previous_hash = block["previous_hash"], attendenceBlock= str(request.POST))
+
+
         for stu in students:
             print(stu.student_usn,'------------///////////')
 
@@ -130,7 +159,7 @@ class FacultytDetails(DetailView):
 class RegisterPage(CreateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image',]
+    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image', 'degree',]
         
     # def get_queryset(self):
     #     return super().get_queryset()
@@ -145,7 +174,7 @@ class RegisterPage(CreateView):
 class UpdateFaculty(UpdateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ('first_name', 'last_name', 'email', 'gender', 'branch', 'image',)
+    fields        = ('first_name', 'last_name', 'email', 'gender', 'branch', 'image', 'degree')
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)

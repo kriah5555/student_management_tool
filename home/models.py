@@ -24,6 +24,7 @@ class Faculty(models.Model):
     date_of_joining = models.DateField(default=datetime.now(), blank = True)
     email           = models.EmailField(max_length = 30, default = 'email',)
     gender          = models.CharField(max_length = 30, default = 'MALE', choices = GENDER_CHOUCE)
+    degree          = models.CharField(max_length = 30, default = '')
     branch          = models.CharField(max_length = 30,  choices = BRANCH_CHOUCE)
     created_date    = models.DateField(auto_now_add = True)
     status          = models.BooleanField(default = 0)
@@ -68,16 +69,23 @@ class Subject(models.Model):
 
 class StudentAttendences(models.Model):
     id          = models.AutoField(primary_key=True)
-    student_usn = models.CharField(max_length = 30, unique = True)
+    student_usn = models.CharField(max_length = 30)
     status      = models.BooleanField()
     branch      = models.CharField(max_length = 30, choices = BRANCH_CHOUCE)
     division    = models.CharField(max_length = 30, choices = DIVISION_CHOUCE)
     subject     = models.CharField(max_length = 30, choices = SUBJECT_CHOUCE)
     sem         = models.IntegerField(choices = SEM_CHOUCE)
+    date        = models.DateField()
     
 
     def __str__(self):
-        return self.student_usn + ' ' + self.last_name
+        return self.student_usn + ' ' + str(self.date) + ' ' + str(self.sem) + ' ' + self.branch
 
-    def get_absolute_url(self):
-        return reverse("students1")
+class StudentAttendenceBlock(models.Model):
+    branch          = models.CharField(max_length = 30, choices = BRANCH_CHOUCE)
+    division        = models.CharField(max_length = 30, choices = DIVISION_CHOUCE)
+    subject         = models.CharField(max_length = 30, choices = SUBJECT_CHOUCE)
+    sem             = models.IntegerField(choices = SEM_CHOUCE)
+    previous_hash   = models.CharField(max_length = 255, default='')
+    attendenceBlock = models.CharField(max_length = 255, default='')
+    date            = models.DateField(auto_now_add = True)
