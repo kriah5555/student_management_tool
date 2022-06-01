@@ -1,0 +1,168 @@
+
+{% load static %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="{% static '/home/css/students_attendence.css' %}" type="text/css">
+
+<!------ Include the above in your HEAD tag ---------->
+{% comment %} <a class="navbar-brand" href="{% url 'home'%}">Home</a> {% endcomment %}
+
+
+<style>
+	ul {
+	  list-style-type: none;
+	  margin: 0;
+	  padding: 0;
+	  overflow: hidden;
+	  background-color: #333;
+	}
+	
+	li {
+	  float: left;
+	}
+	
+	li a {
+	  display: block;
+	  color: white;
+	  text-align: center;
+	  padding: 14px 16px;
+	  text-decoration: none;
+	}
+	
+	li a:hover {
+	  background-color: #111;
+	}
+	</style>
+
+
+
+
+<ul>
+    <li><a class="active" href="{% url 'home' %}">Home</a></li>
+    {% comment %} <li><a href="{% url 'home' %}">Back</a></li> {% endcomment %}
+  </ul>
+<form method="POST">{% csrf_token %}
+
+	
+	<div class="container">
+		<div class="row">
+			<section class="content">
+				<h1>Student attendence</h1>
+				<div class="container">
+					<div class="row">
+						<div id="filter-panel" class="filter-panel">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									{% comment %} <form class="form-inline" role="form"> {% endcomment %}
+										<div class="form-group">
+											<label class="filter-col" style="margin-right:0;" for="pref-orderby" >Subject:</label>
+											<input typr="text" class="form-control" name='subject' disabled value="{{ subject }}">                             
+										</div>
+										<div class="form-group">
+											<label class="filter-col" style="margin-right:0;" for="pref-orderby" >Sem:</label>
+											<input id="pref-orderby" class="form-control" name='sem' disabled value={{ sem }}>                           
+										</div>
+										<div class="form-group">
+											<label class="filter-col" style="margin-right:0;" for="pref-orderby">Branch:</label>
+											<input id="pref-orderby" class="form-control" name="branch" disabled value={{ branch }}>                               
+										</div>
+										<div class="form-group">
+											<label class="filter-col" style="margin-right:0;" for="pref-orderby">Division:</label>
+											<input id="pref-orderby" class="form-control" name="division" disabled value={{ division }}>
+										</div> <!-- form group [order by] --> 
+										<div class="form-group">    
+											<div class="checkbox" style="margin-left:10px; margin-right:10px;">
+												<label for="birthday">Date:</label>
+												<input type="date" id="birthday" name="sdate" disabled value={{ sdate }}>
+												<label for="birthday">Start time:</label>
+												<input type="time" id="birthday" name="stime" disabled value={{ stime }}>
+												<label for="birthday">End time:</label>
+												<input type="time" id="birthday" name="etime" disabled value={{ etime }}>
+											</div>
+											{% comment %} <button type="submit" class="btn btn-default filter-col">
+												<span class="glyphicon glyphicon-record"></span> Proceed to take attendence
+											</button>   {% endcomment %}
+										</div>
+									{% comment %} </form> {% endcomment %}
+								</div>
+							</div>
+						</div>    
+					</div>
+				</div>
+	
+										
+						</div>
+					</div>
+				</div>
+			</section>
+			
+		</div>
+	</div>
+
+
+	<div class="container">
+		<div class="row">
+			<section class="content">
+				<h1>Student attendence</h1>
+				<input type="submit" value="Savea attendence" style="color:blue;margin-left:430px;">
+				<div class="container">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="table-container">
+								<table class="table table-filter">
+									<tbody>
+										<tr>
+											<input type="checkbox" id="select-all">
+    										<label for="car">Select All</label>
+										</tr>
+										{% for student in students %}
+
+											<tr data-status="pagado">
+												<td>
+													<div class="ckbox">
+														<input class="ck" type="checkbox" id="{{ student.student_usn }}" name="{{ student.student_usn }}">
+														<label for="{{ student.student_usn }}"></label>
+													</div>
+												</td>
+												<td>
+													</a>
+												</td>
+												<td>
+													<div class="media">
+														<a href="#" class="pull-left">
+															<img src="{{ student.avatars.url }}" class="media-photo" style="border-radius: 50%;height: 40px;width: 40px;">
+														</a>
+														<div class="media-body">
+															<span class="media-meta pull-right">{{ student.student_usn }}</span>
+															<h4 class="title">
+																Student 1
+															</h4>
+														</div>
+													</div>
+												</td>
+											</tr>
+										{% endfor %}
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+		</div>
+	</div>
+</form>
+
+<script>
+	document.getElementById('select-all').onclick = function() {
+		var checkboxes = document.getElementsByClassName('ck');
+		for (var checkbox of checkboxes) {
+			checkbox.checked = this.checked;
+		}
+	}
+</script>
