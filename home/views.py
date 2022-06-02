@@ -16,7 +16,14 @@ from django.core.mail import send_mail
 from home.blockchain import Blockchain as _blockchain
 
 
-
+# print("prevHash ====>",StudentAttendenceBlock.objects.all()[:: -1][0].previous_hash)
+previos_hash1 = StudentAttendenceBlock.objects.all()
+if not previos_hash1:
+    previos_hash1 = 10
+else:
+    previos_hash1 = StudentAttendenceBlock.objects.all()[:: -1][0].previous_hash
+print('previos_hash ===>', previos_hash1)
+Blockchain = _blockchain(prev= previos_hash1)
 
 
 class HomPage(TemplateView):
@@ -113,29 +120,16 @@ def student_attendence(request):
             print(stu.student_usn,'------------///////////')
             attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = stu.student_usn in request.POST, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])
 
-        print(request.POST,'======---------------   ')
-
+        print(request.POST,'======---------------')
 
         ## Blockchain
-
-        # if not Blockchain.is_chain_valid():
-        #     print('Block is not valid')
-        # else :
-        #     block = Blockchain.mine_block(data= str(request.POST) )
-        #     print('block ===>',block)
-        #     print("block is valid")
-        #     for stu in students:
-        #         if stu.student_usn in request.POST: 
-        #             status = 1
-        #             pass
-        #         else :
-        #             status = 0
-        #             pass
-        #         attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = status, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])
-       
+        if not Blockchain.is_chain_valid():
+            print('Block is not valid')
+        else :
+            block = Blockchain.mine_block(data= str(request.POST) )
+            print('block ===>',block)
+            print("Block is valid")
             
-            # attendence =StudentAttendenceBlock.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], previous_hash = block["previous_hash"], attendenceBlock= str(request.POST))
-
 
         for stu in students:
             print(stu.student_usn,'------------///////////')
