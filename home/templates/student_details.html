@@ -40,9 +40,9 @@
                                         {{ student.first_name }}
                                     </h5>
                                     <h6>
-                                        Web Developer and Designer
+                                        Student
                                     </h6>
-                                    <p class="proile-rating">RANKINGS : <span>8/10</span></p>
+                                    <p class="proile-rating">Total attendence : <span>{{ total_attendence }}/100</span></p>
                             {% comment %} <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="profile-work">
+                        {% comment %} <div class="profile-work">
                             <p>WORK LINK</p>
                             <a href="">Website Link</a><br/>
                             <a href="">Bootsnipp Profile</a><br/>
@@ -75,25 +75,26 @@
                             <a href="">WordPress</a><br/>
                             <a href="">WooCommerce</a><br/>
                             <a href="">PHP, .Net</a><br/>
-                        </div>
-                    </div>
+                        </div>{% endcomment %}
+                    </div> 
                     <div class="col-md-8">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>User Id</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{ student.usn }}</p>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>Name</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>{{ student.first_name }}  {{ student.last_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>USN</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ student.student_usn }}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -117,7 +118,31 @@
                                                 <label>Division</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>>{{ student.division }}</p>
+                                                <p>{{ student.division }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Date of birthday</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ student.date_of_birth }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Gender</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ student.gender }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Semister</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ student.sem }}</p>
                                             </div>
                                         </div>
                             </div>

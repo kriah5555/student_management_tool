@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 
 import os
+import asynchat
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,10 +139,13 @@ LOGIN_URL = '/'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# EMAIL_HOST = 'localhost'
-# EMAIl_PORT = '1025'
-# EMAIL_HOST_USER = ''
-# EMIL_HOST_PASSWORD = ''
-# EMAIL_USE_TLS = False
-# EMAIL_SUE_SSL = False
 # to send mail run this : python -m smtpd -n -c DebuggingServer localhost:1025
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT  = 1025
+# EMAIL_PORT  = 587 # to send acuel mail
+EMAIL_USE_TLS  = True
+EMAIL_HOST_USER  = 'localhost'
+# EMAIL_HOST_USER  = 'example.email.com'  # to send acuel mail
+EMAIL_HOST_USER  = ''

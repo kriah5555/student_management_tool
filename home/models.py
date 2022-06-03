@@ -35,7 +35,8 @@ class Faculty(models.Model):
     def get_absolute_url(self):
         return reverse("faculties")
         # return reverse("faculties", args = (str(self.id)))
-    
+    def class_name(self):
+        return 'faculty'
 
 
 class Student(models.Model):
@@ -60,7 +61,8 @@ class Student(models.Model):
     def get_absolute_url(self):
         return reverse("students1")
 
-
+    def class_name(self):
+        return 'student'
 
 class Subject(models.Model):
     id       = models.AutoField(primary_key=True)

@@ -7,7 +7,6 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.decorators import login_required
 from .models import *
-from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib import messages #import messages
 from django.shortcuts import redirect
@@ -15,6 +14,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from home.blockchain import Blockchain as _blockchain
 
+BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
 
 # print("prevHash ====>",StudentAttendenceBlock.objects.all()[:: -1][0].previous_hash)
 previos_hash1 = StudentAttendenceBlock.objects.all()
@@ -146,9 +146,31 @@ class StudentDetails(DetailView):
     model         = Student
     template_name = "student_details.html"
 
+    def get_context_data(self, **kwargs):
+        student_id = self.kwargs['pk']
+        student_usn = Student.objects.filter(usn = student_id).first().student_usn
+        student_all_att = StudentAttendences.objects.filter(student_usn = student_usn)
+        print(student_all_att)
+        student_attendence = dict()
+        # for attendence in student_all_att:
+        #     BRANCH_CHOUCE
+
+        return super().get_context_data(**kwargs)
+
 class FacultytDetails(DetailView):
     model         = Faculty
     template_name = "faculty_details.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fac_id  =  self.kwargs['pk']
+        print(Faculty.objects.filter(fid = fac_id).first().status,'------------')
+        # print(User.objects.filter(last_name = fac_id).first().username,'============')
+        if (User.objects.filter(last_name = fac_id).first()):
+           context["user_id"] = User.objects.filter(last_name = fac_id).first().username
+        else:
+           context["user_id"] = 'User not created'
+        return context
 
 class RegisterPage(CreateView):
     template_name = "register.html"
@@ -168,7 +190,7 @@ class RegisterPage(CreateView):
 class UpdateFaculty(UpdateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ('first_name', 'last_name', 'email', 'gender', 'branch', 'image', 'degree')
+    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image', 'degree',]
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
@@ -244,23 +266,28 @@ def create_user(request, pk):
             return render(request, template_name, context)
         else:
             username = request.POST['username']
+            print(User.objects.filter(username=username).exists(),'==============   =')
             if not  User.objects.filter(username=username).exists():
-
                 if (request.path == f'/create_faculty_user/{pk}'):
                     faculty    = Faculty.objects.get(pk = pk)
                     email      = faculty.email
                     first_name = 'faculty'
                     is_staff   = True
+                    redirect_l = "/faculties/"
                 elif (request.path == f'/create_student_user/{pk}'):
                     faculty    = Student.objects.get(pk = pk)
                     email      = faculty.email
                     first_name = 'student'
                     is_staff   = False
+                    redirect_l = "students1"
                 password = request.POST['pwd']
                 if faculty and username and password:
                     user = User.objects.create_user(first_name = first_name, last_name = faculty.pk, username = username, password = password, email = email, is_staff = is_staff)
                     user.save()
-                    faculty.status = TRUE
+                    faculty = Faculty.objects.get(pk = pk)
+                    faculty.status = True
+                    faculty.save()
+                    messages.success(request, 'User created successfully')
                 elif not username:
                     messages.success(request, 'Please enter username')
                 elif not password:
@@ -268,10 +295,17 @@ def create_user(request, pk):
                 elif not faculty:
                     messages.success(request, 'Please select faculty')
                 messages.success(request, 'Profile details updated.')
-                return redirect("/faculties/")
+                if  request.session['user_error']:
+                        del  request.session['user_error']
+                return redirect(redirect_l)
             else:
-                request.session['user_error'] = 'Username already exists'
-                return redirect(f'/create_student_user/{pk}')
+                # if user exist then redirect to respective page
+                if (request.path == f'/create_faculty_user/{pk}'):
+                    request.session['user_error'] = 'Username already exists'
+                    return redirect(f'/create_faculty_user/{pk}')
+                elif (request.path == f'/create_student_user/{pk}'):
+                    request.session['user_error'] = 'Username already exists'
+                    return redirect(f'/create_student_user/{pk}')
     else:
             return redirect("home")
 
