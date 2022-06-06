@@ -198,6 +198,8 @@ def download_student_details(request, pk) :
         else:
             student_attendence[str(stu.date)] = {stu.subject : 'Absent'}
     df = pd.DataFrame(student_attendence)
+    df.fillna('No atendence', inplace=True)
+
     print(df)  
     print('======')
     # response = HttpResponse(content_type = 'test/csv')  
