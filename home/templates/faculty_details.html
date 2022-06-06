@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-md-2">
                         <a href="{% url 'update_faculty' faculty.pk %}" class="btn-card" title="Click to edit">Edit</a>   
-                        {% if not faculty.status %}
+                        {% if not faculty.status  and user.is_superuser %}
                             <a href="{% url 'create_faculty_user' faculty.pk %}" class="btn-card" title="Click to edit">| Create username</a>   
                         {% endif %}
 

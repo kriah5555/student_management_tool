@@ -56,13 +56,11 @@
 					<div class="row">
 						<div id="filter-panel" class="filter-panel">
 							<div class="panel panel-default">
-								<div class="panel-body">
+								<div class="panel-body" style="text-align: center;">
 									
 									{% comment %} <form class="form-inline" role="form"> {% endcomment %}
-										<center>
 										<h4>Subject : <b>{{ subject }}</b>; Sem : <b>{{ sem }}</b>; Branch : <b>{{ branch }}</b>; Division : <b>{{ division }}</b>
 										; Date : <b>{{ sdate }}</b></h4>
-										</center>
 										{% comment %} <div class="form-group">
 											<label class="filter-col" style="margin-right:0;" for="pref-orderby" >Subject:</label>
 											<input typr="text" class="form-control" name='subject' disabled value="{{ subject }}">                             
@@ -90,8 +88,8 @@
 											{% comment %} </div> {% endcomment %}
 											{% if students %}
 											
-											<button type="submit" class="btn btn-default filter-col">
-												<span class="glyphicon glyphicon-record"></span> save attendenct
+											<button type="submit" class="btn btn-default filter-col" style="background: #77e977;">
+											 save attendenct
 											</button>  
 											{% endif %}
 										</div>
@@ -149,7 +147,7 @@
 														<div class="media-body">
 															<span class="media-meta pull-right">{{ student.student_usn }}</span>
 															<h4 class="title">
-																Student 1
+																{{ student.first_name }} {{ student.last_name }}
 															</h4>
 														</div>
 													</div>

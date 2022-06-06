@@ -13,15 +13,17 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from home.blockchain import Blockchain as _blockchain
+import csv
+from django.http import HttpResponse
+import pandas as pd
 
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
 
-# print("prevHash ====>",StudentAttendenceBlock.objects.all()[:: -1][0].previous_hash)
 previos_hash1 = StudentAttendenceBlock.objects.all()
 if not previos_hash1:
     previos_hash1 = 10
 else:
-    previos_hash1 = StudentAttendenceBlock.objects.all()[:: -1][0].previous_hash
+    previos_hash1 = StudentAttendenceBlock.objects.all()[::-1][0].previous_hash
 print('previos_hash ===>', previos_hash1)
 Blockchain = _blockchain(prev= previos_hash1)
 
@@ -29,6 +31,17 @@ Blockchain = _blockchain(prev= previos_hash1)
 class HomPage(TemplateView):
     template_name = "home1.html"
     # template_name = "home.html"
+    def get(self, request):
+        if request.user.is_authenticated:
+            if request.user.is_superuser: # if superuser then redirect to faculty page
+                return redirect('faculties')
+            elif request.user.is_staff: # if is faculty redirect  to studets page
+                return redirect('students1')
+            elif not request.user.is_staff and not request.user.is_superuser:
+                return redirect ('student_details', pk = request.user.last_name)
+        else:
+            # return redirect('home')
+            return render(request, template_name = self.template_name)
 
 class RegisterStudentPage(CreateView):
     template_name = "register.html"
@@ -102,7 +115,7 @@ class StudentAttendence(ListView):
 
 def student_attendence(request):
     if request.method == 'GET':
-        validate = StudentAttendences.objects.filter (subject = request.session['subject'], sem = request.session['sem'], branch =request.session['branch'], date = request.session['sdate'])
+        validate = StudentAttendences.objects.filter (subject = request.session['subject'], sem = request.session['sem'], branch =request.session['branch'], date = request.session['sdate'], division = request.session['division'])
         context = {
             'students' : Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem']),
             'subject'  : request.session['subject'],
@@ -117,10 +130,7 @@ def student_attendence(request):
         students   = Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'])
         # attendence = StudentAttendences.objects.create()
         for stu in students:
-            print(stu.student_usn,'------------///////////')
             attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = stu.student_usn in request.POST, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])
-
-        print(request.POST,'======---------------')
 
         ## Blockchain
         if not Blockchain.is_chain_valid():
@@ -129,18 +139,10 @@ def student_attendence(request):
             block = Blockchain.mine_block(data= str(request.POST) )
             print('block ===>',block)
             print("Block is valid")
-            
 
-        for stu in students:
-            print(stu.student_usn,'------------///////////')
+        return redirect('students1')
 
-        print(request.POST,'======---------------   ')
-        return redirect('faculties')
-
-
-
-
-    
+# SUBJECTS = {'M1' : 'M1', 'M2' : 'M2', 'ENGLISH' : 'ENGLISH', 'BEEE' : 'BEEE', 'SCIENCE' : 'SCIENCE'}
 
 class StudentDetails(DetailView):
     model         = Student
@@ -150,12 +152,63 @@ class StudentDetails(DetailView):
         student_id = self.kwargs['pk']
         student_usn = Student.objects.filter(usn = student_id).first().student_usn
         student_all_att = StudentAttendences.objects.filter(student_usn = student_usn)
-        print(student_all_att)
         student_attendence = dict()
-        # for attendence in student_all_att:
-        #     BRANCH_CHOUCE
+        final_attendence   = dict()
+        # initilize all subjects with 0 calaulation
+        for subject, s in SUBJECT_CHOUCE:
+            student_attendence[subject] = {'present' : 0, 'absent' : 0,'total' : 0}
+            final_attendence[subject] = {'percentage' : 0}
+        # calculate attendence
+        for attendence in student_all_att:
+            if attendence.status:
+                student_attendence[attendence.subject]['present'] += (1 + 0)
+            else:
+                student_attendence[attendence.subject]['absent'] += (1 + 0)
+            student_attendence[attendence.subject]['total'] += 1
 
-        return super().get_context_data(**kwargs)
+        # df = pd.DataFrame(student_attendence)
+        # print(df)       
+        for sub, att in student_attendence.items():
+            if att['total'] == 0:
+                final_attendence[sub]['percentage'] = 'no atendence'
+                final_attendence[sub]['color']      = 'red'
+            else:
+                floa = (att['present'] / att['total']) * 100
+                format_float = "{:.2f}".format(floa)
+                final_attendence[sub]['percentage'] = format_float
+                if floa >= 75:
+                    final_attendence[sub]['color']  = 'green'
+                else:
+                    final_attendence[sub]['color']  = 'red'
+        context                   = super().get_context_data(**kwargs)
+        context['attendence']     = final_attendence
+        # df = pd.DataFrame(final_attendence)
+        # print(df)
+
+        return context
+
+def download_student_details(request, pk) :
+    student_usn = Student.objects.filter(usn = pk).first().student_usn
+    student_all_att = StudentAttendences.objects.filter(student_usn = student_usn)
+    student_attendence = dict()
+    # initilize all subjects with 0 calaulation
+    for stu in student_all_att:
+        if (stu.status):
+            student_attendence[str(stu.date)] = {stu.subject : 'Present'}
+        else:
+            student_attendence[str(stu.date)] = {stu.subject : 'Absent'}
+    df = pd.DataFrame(student_attendence)
+    print(df)  
+    print('======')
+    # response = HttpResponse(content_type = 'test/csv')  
+    # response['content-Disposition'] = f'attachment; filename={student_usn}.csv'
+    # writter = csv.writer(response, csv.excel)
+    # writter.writerows(student_attendence)
+    # return response
+    geeks_object = df.to_html()
+  
+    return HttpResponse(geeks_object)
+    # return redirect('student_details', pk = pk)
 
 class FacultytDetails(DetailView):
     model         = Faculty
@@ -164,8 +217,6 @@ class FacultytDetails(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         fac_id  =  self.kwargs['pk']
-        print(Faculty.objects.filter(fid = fac_id).first().status,'------------')
-        # print(User.objects.filter(last_name = fac_id).first().username,'============')
         if (User.objects.filter(last_name = fac_id).first()):
            context["user_id"] = User.objects.filter(last_name = fac_id).first().username
         else:
@@ -213,45 +264,46 @@ class DeleteFaculty(DeleteView):
         return context
 
 def login_page(request):
-    # send_mail(
-    # 'Subject here',
-    # 'Here is the message.',
-    # 'ka36l1107@gmail.com',
-    # ['sunilgangadhar.infanion@gmail.com'],
-    # # fail_silently=False,
-    # )
-    if (request.path == '/login_admin/'):
-        path = 'register1.jpg'
-        form = 'Admin'
-    elif (request.path == '/login_faculty/'):
-        path = 'home_background.jpg'
-        form = 'Faculty'
-    elif (request.path == '/login_student/'):
-        path = 'students.jpg'
-        form = 'Student'
-    context = {'image' : path, 'form' : form}
-    if request.method == 'GET':
-        template_name = "login.html"
-    elif (request.method == 'POST'):
-
+    if request.user.is_authenticated:
+        if request.user.is_superuser: # if superuser then redirect to faculty page
+            return redirect('faculties')
+        elif request.user.is_staff: # if is faculty redirect  to studets page
+            return redirect('students1')
+        elif not request.user.is_staff and not request.user.is_superuser:
+            return redirect ('student_details', pk = request.user.last_name)
+    else:
         if (request.path == '/login_admin/'):
-           first_name = ''
-           next       = '/faculties/'
+            path = 'register1.jpg'
+            form = 'Admin'
         elif (request.path == '/login_faculty/'):
-            first_name = 'faculty'
-            next       = '/students1/'
+            path = 'home_background.jpg'
+            form = 'Faculty'
         elif (request.path == '/login_student/'):
-            first_name = 'student'
-        user = authenticate(username = request.POST['username'], password = request.POST['password'], first_name = first_name)
-        if user is not None :
-            login(request, user)
-            if  (request.path == '/login_student/'):
-                next = '/student_details/'+request.user.last_name
-            return redirect(next)
-        else :
+            path = 'students.jpg'
+            form = 'Student'
+        context = {'image' : path, 'form' : form}
+        if request.method == 'GET':
             template_name = "login.html"
-            context['error'] = 'Please enter valid username and password'
-    return render(request, template_name, context)
+        elif (request.method == 'POST'):
+
+            if (request.path == '/login_admin/'):
+                first_name = ''
+                next       = '/faculties/'
+            elif (request.path == '/login_faculty/'):
+                first_name = 'faculty'
+                next       = '/students1/'
+            elif (request.path == '/login_student/'):
+                first_name = 'student'
+            user = authenticate(username = request.POST['username'], password = request.POST['password'], first_name = first_name)
+            if user is not None :
+                login(request, user)
+                if  (request.path == '/login_student/'):
+                    next = '/student_details/'+user.last_name
+                return redirect(next)
+            else :
+                template_name = "login.html"
+                context['error'] = 'Please enter valid username and password'
+        return render(request, template_name, context)
 
 def create_user(request, pk):
     if request.user.is_authenticated:
@@ -266,7 +318,6 @@ def create_user(request, pk):
             return render(request, template_name, context)
         else:
             username = request.POST['username']
-            print(User.objects.filter(username=username).exists(),'==============   =')
             if not  User.objects.filter(username=username).exists():
                 if (request.path == f'/create_faculty_user/{pk}'):
                     faculty    = Faculty.objects.get(pk = pk)
@@ -282,7 +333,7 @@ def create_user(request, pk):
                     redirect_l = "students1"
                 password = request.POST['pwd']
                 if faculty and username and password:
-                    user = User.objects.create_user(first_name = first_name, last_name = faculty.pk, username = username, password = password, email = email, is_staff = is_staff)
+                    user = User.objects.create_user(first_name = first_name, last_name = pk, username = username, password = password, email = email, is_staff = is_staff)
                     user.save()
                     faculty = Faculty.objects.get(pk = pk)
                     faculty.status = True
@@ -295,8 +346,6 @@ def create_user(request, pk):
                 elif not faculty:
                     messages.success(request, 'Please select faculty')
                 messages.success(request, 'Profile details updated.')
-                if  request.session['user_error']:
-                        del  request.session['user_error']
                 return redirect(redirect_l)
             else:
                 # if user exist then redirect to respective page

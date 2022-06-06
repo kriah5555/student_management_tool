@@ -7,10 +7,11 @@ from datetime import datetime
 
 """
 pip install pillow
-pip install django-rest_framework
+pip install pandas
+
 """
 GENDER_CHOUCE   = (('MALE','MALE'), ('FEMALE','FEMALE'))
-SUBJECT_CHOUCE  = (('MALE','MALE'), ('FEMALE','FEMALE'))
+SUBJECT_CHOUCE  = (('M1', 'M1'), ('M2', 'M2'), ('BEEE', 'BEEE'), ('ENGLISH', 'ENGLISH'), ('SCIENCE', 'SCIENCE'))
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
 SEM_CHOUCE      = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),)
 DIVISION_CHOUCE = (('A', 'A'), ('B', 'B'), ('C', 'C'))

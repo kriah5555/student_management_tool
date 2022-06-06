@@ -42,7 +42,8 @@
                                     <h6>
                                         Student
                                     </h6>
-                                    <p class="proile-rating">Total attendence : <span>{{ total_attendence }}/100</span></p>
+                                    <!-- <p class="proile-rating">Total attendence : <span>{{ total_attendence }}/100</span></p> -->
+                                    <a href="{% url 'download_student_attendence' student.pk %}">View atendence</a>
                             {% comment %} <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -55,7 +56,7 @@
                     </div>
                     <div class="col-md-2">
                         <a href="{% url 'update_student' student.pk %}" class="btn-card" title="Click to edit">Edit</a> 
-                        {% if not student.status %}
+                        {% if not student.status and user.is_staff %}
                             <a href="{% url 'create_student_user' student.pk %}" class="btn-card" title="Click to edit">| Create username</a>   
                         {% endif %}  
 
@@ -198,19 +199,28 @@
                     </div>
                 </div>
 
-                <h5 class="font-size24 sm-font-size22 xs-font-size20">Attendence</h5>
+                <h5 class="font-size24 sm-font-size22 xs-font-size20">Attendence {{ SUBJECT_CHOUCE }}</h5>
+
+                {% for subject, att in attendence.items  %}
 
                     <div class="sm-no-margin" >
                         <div class="progress-text">
                             <div class="row">
-                                <div class="col-7">English</div>
-                                <div class="col-5 text-right">0%</div>
+                                <div class="col-7">{{ subject }}</div>
+                                <div class="col-5 text-right">{{ att.percentage }} 
+                                {% if att.percentage != 'no atendence' %}    
+                                    %
+                                {% endif %}
+                                </div>
                             </div>
                         </div>
                         <div class="custom-progress progress">
-                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-sky"></div>
+                            <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{% if att.percentage != 'no atendence' %}  {{ att.percentage }}% {% endif %} ; 
+                                background:{{ att.color }};
+                            " class="animated custom-bar progress-bar slideInLeft bg-sky"></div>
                         </div>
-                        <div class="progress-text">
+                {% endfor %}
+                        <!-- <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">M1</div>
                                 <div class="col-5 text-right">0%</div>
@@ -218,8 +228,8 @@
                         </div>
                         <div class="custom-progress progress">
                             <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-orange"></div>
-                        </div>
-                        <div class="progress-text">
+                        </div> -->
+                        <!-- <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">M2</div>
                                 <div class="col-5 text-right">0%</div>
@@ -227,8 +237,8 @@
                         </div>
                         <div class="custom-progress progress">
                             <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-green"></div>
-                        </div>
-                        <div class="progress-text">
+                        </div> -->
+                        <!-- <div class="progress-text">
                             <div class="row">
                                 <div class="col-7">BEEE</div>
                                 <div class="col-5 text-right">0%</div>
@@ -236,7 +246,7 @@
                         </div>
                         <div class="custom-progress progress">
                             <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="animated custom-bar progress-bar slideInLeft bg-yellow"></div>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>

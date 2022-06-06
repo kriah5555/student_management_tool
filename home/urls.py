@@ -28,5 +28,6 @@ urlpatterns = [
     path('create_faculty_user/<int:pk>', login_required(create_user), name = 'create_faculty_user'),
     path('create_student_user/<int:pk>', login_required(create_user), name = 'create_student_user'),
     path('logout/', v.lgout, name = 'logout'),
+    path('download_student_attendence/<int:pk>', v.download_student_details, name = 'download_student_attendence'),
 ]
 
