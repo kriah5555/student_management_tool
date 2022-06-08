@@ -19,6 +19,20 @@ import pandas as pd
 
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
 
+# to send message
+account_sid = "ACff469b87e19877056d4b9514ca71a508"
+auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
+# to send message
+from twilio.rest import Client
+
+client = Client(account_sid, auth_token)
+message = client.messages.create(
+                body="Hiii",
+                to="+919986168736",
+                from_="+19895751647",
+                )
+print(message.sid)
+
 previos_hash1 = StudentAttendenceBlock.objects.all()
 if not previos_hash1:
     previos_hash1 = 10
@@ -299,8 +313,20 @@ def login_page(request):
             user = authenticate(username = request.POST['username'], password = request.POST['password'], first_name = first_name)
             if user is not None :
                 login(request, user)
-                if  (request.path == '/login_student/'):
-                    next = '/student_details/'+user.last_name
+                if  (request.path == '/login_admin/' and user.first_name != ''):
+                    print('-------')
+                    logout(request) # if not admin logout
+                    return redirect('home')
+                elif (request.path == '/login_faculty/' and user.first_name != 'faculty'):
+                    logout(request) # if not admin logout
+                    return redirect('home')
+                if  (request.path == '/login_student/'): # if not student logout
+                    next = ''
+                    if (not user.is_staff and not user.is_superuser):
+                        next = '/student_details/'+user.last_name
+                    else :
+                        logout(request)
+                        return redirect('home')
                 return redirect(next)
             else :
                 template_name = "login.html"
@@ -337,7 +363,7 @@ def create_user(request, pk):
                 if faculty and username and password:
                     user = User.objects.create_user(first_name = first_name, last_name = pk, username = username, password = password, email = email, is_staff = is_staff)
                     user.save()
-                    faculty = Faculty.objects.get(pk = pk)
+                    # faculty = Faculty.objects.get(pk = pk)
                     faculty.status = True
                     faculty.save()
                     messages.success(request, 'User created successfully')

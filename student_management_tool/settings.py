@@ -149,3 +149,4 @@ EMAIL_USE_TLS  = True
 EMAIL_HOST_USER  = 'localhost'
 # EMAIL_HOST_USER  = 'example.email.com'  # to send acuel mail
 EMAIL_HOST_USER  = ''
+

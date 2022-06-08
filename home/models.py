@@ -8,6 +8,7 @@ from datetime import datetime
 """
 pip install pillow
 pip install pandas
+pip install twilio
 
 """
 GENDER_CHOUCE   = (('MALE','MALE'), ('FEMALE','FEMALE'))
