@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import datetime
 
+
 """
 pip install pillow
 pip install pandas
 pip install twilio
+pip install django-phonenumber-field[phonenumbers]
 
 """
 GENDER_CHOUCE   = (('MALE','MALE'), ('FEMALE','FEMALE'))
@@ -16,6 +18,7 @@ SUBJECT_CHOUCE  = (('M1', 'M1'), ('M2', 'M2'), ('BEEE', 'BEEE'), ('ENGLISH', 'EN
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
 SEM_CHOUCE      = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),)
 DIVISION_CHOUCE = (('A', 'A'), ('B', 'B'), ('C', 'C'))
+PHONE           = (('8197424203', '8197424203'), ('8747972557', '8747972557'), ('9663172677', '9663172677'))
 
 class Faculty(models.Model):
     fid             = models.AutoField(primary_key=True)
@@ -30,6 +33,7 @@ class Faculty(models.Model):
     branch          = models.CharField(max_length = 30,  choices = BRANCH_CHOUCE)
     created_date    = models.DateField(auto_now_add = True)
     status          = models.BooleanField(default = 0)
+    phone           = models.CharField(choices = PHONE, max_length = 30, default = '')
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
@@ -56,6 +60,7 @@ class Student(models.Model):
     sem             = models.IntegerField(choices = SEM_CHOUCE)
     created_date    = models.DateField(auto_now_add = True)
     status          = models.BooleanField(default = 0)
+    phone           = models.CharField(choices = PHONE, max_length = 30, default = '')
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

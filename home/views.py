@@ -23,15 +23,15 @@ BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SC
 account_sid = "ACff469b87e19877056d4b9514ca71a508"
 auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
 # to send message
-from twilio.rest import Client
+# from twilio.rest import Client
 
-client = Client(account_sid, auth_token)
-message = client.messages.create(
-                body="Hiii",
-                to="+919986168736",
-                from_="+19895751647",
-                )
-print(message.sid)
+# client = Client(account_sid, auth_token)
+# message = client.messages.create(
+#                 body="Hiii",
+#                 to="+919986168736",
+#                 from_="+19895751647",
+#                 )
+# print(message.sid)
 
 previos_hash1 = StudentAttendenceBlock.objects.all()
 if not previos_hash1:
@@ -40,6 +40,9 @@ else:
     previos_hash1 = StudentAttendenceBlock.objects.all()[::-1][0].previous_hash
 print('previos_hash ===>', previos_hash1)
 Blockchain = _blockchain(prev= previos_hash1)
+
+class ForgotPassword(TemplateView):
+    template_name = 'forgot_password.html'
 
 
 class HomPage(TemplateView):
@@ -60,7 +63,7 @@ class HomPage(TemplateView):
 class RegisterStudentPage(CreateView):
     template_name = "register.html"
     model         = Student
-    fields        = ['student_usn', 'first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'division', 'sem', 'image', ]
+    fields        = ['student_usn', 'first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'division', 'sem', 'image', 'phone']
         
     # def get_queryset(self):
     #     return super().get_queryset()
@@ -242,7 +245,7 @@ class FacultytDetails(DetailView):
 class RegisterPage(CreateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image', 'degree',]
+    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image', 'degree', 'phone',]
         
     # def get_queryset(self):
     #     return super().get_queryset()
@@ -291,13 +294,16 @@ def login_page(request):
         if (request.path == '/login_admin/'):
             path = 'register1.jpg'
             form = 'Admin'
+            forg = False
         elif (request.path == '/login_faculty/'):
             path = 'home_background.jpg'
             form = 'Faculty'
+            forg = True
         elif (request.path == '/login_student/'):
             path = 'students.jpg'
             form = 'Student'
-        context = {'image' : path, 'form' : form}
+            forg = True
+        context = {'image' : path, 'form' : form, 'forg' : forg}
         if request.method == 'GET':
             template_name = "login.html"
         elif (request.method == 'POST'):
