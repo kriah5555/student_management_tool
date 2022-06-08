@@ -16,21 +16,22 @@ from home.blockchain import Blockchain as _blockchain
 import csv
 from django.http import HttpResponse
 import pandas as pd
+from twilio.rest import Client
+
 
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
 
-# to send message
-account_sid = "ACff469b87e19877056d4b9514ca71a508"
-auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
-# to send message
-# from twilio.rest import Client
 
+
+# account_sid = "ACff469b87e19877056d4b9514ca71a508"
+# auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
 # client = Client(account_sid, auth_token)
 # message = client.messages.create(
 #                 body="Hiii",
-#                 to="+919986168736",
+#                 to="+919380432761",
 #                 from_="+19895751647",
 #                 )
+
 # print(message.sid)
 
 previos_hash1 = StudentAttendenceBlock.objects.all()
@@ -43,7 +44,51 @@ Blockchain = _blockchain(prev= previos_hash1)
 
 class ForgotPassword(TemplateView):
     template_name = 'forgot_password.html'
+    def post(self, request):
+        #faculty forgot password
+        phone = self.request.POST['phone']
+        if phone :# if valid phone number
+            if 'faculty' in self.request.POST :
+                faculty = Faculty.objects.filter(phone = phone).first()
+                if faculty:  
+                    user = User.objects.get(last_name = faculty.pk)
+                    user.password = 'password'
+                    send_message(phone, user.username, faculty.first_name)
+                    user.save()
+                    cntext = {'success' : 'Faculty password reset success.'}
+                else :
+                    context = {'error': 'Please enter valid phone number, provided number is not linked with any faculty'}
+            else :
+                student = Student.objects.filter(phone = phone).first()
+                if student:  
+                    user = User.objects.get(last_name = student.pk)
+                    user.password = 'password'
+                    send_message(phone, user.username, student.first_name)
+                    user.save()
+                    cntext = {'success' : 'Student password reset success.'}
+                else :
+                    context = {'error': 'Please enter valid phone number, provided number is not linked with any student'}
+        else : 
+            context = {'error': 'Please enter valid phone number'}
+        return render(request, self.template_name, context)
+         
 
+
+def send_message(number, uid, name):
+    account_sid = "ACff469b87e19877056d4b9514ca71a508"
+    auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
+    client  = Client(account_sid, auth_token)
+    message = f"Hi {name} your new password is 'password' and  user id is : {uid}"
+    number  =  f"+91{number}"
+    print(message, number, '-------------------')
+    message = client.messages.create(
+                body  = message,
+                to    = number,
+                from_ ="+19895751647",
+    )
+    print(message.sid, 'Message sent!!!!!!!')
+
+    
 
 class HomPage(TemplateView):
     template_name = "home1.html"
