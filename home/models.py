@@ -101,5 +101,5 @@ class StudentAttendenceBlock(models.Model):
     sem             = models.IntegerField(choices = SEM_CHOUCE)
     previous_hash   = models.CharField(max_length = 255, default='')
     attendenceBlock = JSONField(null=False, default= {})
-    date            = models.DateField(auto_now_add = True)
+    date            = models.DateField()
     

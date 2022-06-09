@@ -30,5 +30,6 @@ urlpatterns = [
     path('logout/', v.lgout, name = 'logout'),
     path('forgot_password/', ForgotPassword.as_view(), name = 'forgot_password'),
     path('download_student_attendence/<int:pk>', v.download_student_details, name = 'download_student_attendence'),
+    path('attendence_overview/', attendence_overview, name = 'attendence_overview'),
 ]
 

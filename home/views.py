@@ -87,8 +87,6 @@ class ForgotPassword(TemplateView):
         else : 
             context = {'error': 'Please enter valid phone number'}
         return render(request, self.template_name, context)
-         
-
 
 def send_message(number, uid, name):
     account_sid = "ACff469b87e19877056d4b9514ca71a508"
@@ -103,8 +101,6 @@ def send_message(number, uid, name):
                 from_ ="+19895751647",
     )
     print(message.sid, 'Message sent!!!!!!!')
-
-    
 
 class HomPage(TemplateView):
     template_name = "home1.html"
@@ -227,7 +223,7 @@ def student_attendence(request):
             block = Blockchain.mine_block(data= dict1)
             print('block ===>',block)
             print("block is valid")
-            attendence =StudentAttendenceBlock.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], previous_hash = block["previous_hash"], attendenceBlock = block, subject = request.session['subject'])
+            attendence =StudentAttendenceBlock.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], previous_hash = block["previous_hash"], attendenceBlock = block, subject = request.session['subject'], date = request.session['sdate'])
 
         ## Blockchain
         ''' if not Blockchain.is_chain_valid():
@@ -478,13 +474,38 @@ def lgout(request):
     return redirect('home')
 
         
+def attendence_overview(request):
 
+    template_name = 'attendence_overview.html'
+    print(request.method,'--------')
+    if request.method == 'POST':
+        print('=========')
 
+        subject          = request.POST['subject']
+        sem              = request.POST['sem']
+        branch           = request.POST['branch']
+        division         = request.POST['division']
+        date             = request.POST['date']
 
-
-   
-
-
-            
-
+        attendence       = StudentAttendenceBlock.objects.filter(subject=subject, sem=sem, branch=branch, division=division, date=date).first()
+        final_attendence = []
+        if attendence:
+            attendence       = attendence.attendenceBlock['data']
+            for usn, status in attendence.items():
+                student = Student.objects.filter(student_usn = usn).first()
+                image = student.image
+                name  = f'{student.first_name} {student.last_name}'
+                final_attendence.append([usn, 'Present' if status else 'Absent', name, image])
+        print(final_attendence)
+        context = {
+            'subject'  : subject,
+            'sem'      : sem,
+            'branch'   : branch,
+            'division' : division,
+            'date'     : date,
+            'attendence' : final_attendence,
+        }  
+    else :
+        context = {} 
+    return render(request, template_name, context)
     
