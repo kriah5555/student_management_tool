@@ -4,12 +4,15 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import datetime
+from jsonfield import JSONField
+
 
 
 """
 pip install pillow
 pip install pandas
 pip install twilio
+pip install jsonfield
 
 """
 GENDER_CHOUCE   = (('MALE','MALE'), ('FEMALE','FEMALE'))
@@ -76,14 +79,16 @@ class Subject(models.Model):
     sem      = models.IntegerField( choices = SEM_CHOUCE)
 
 class StudentAttendences(models.Model):
-    id          = models.AutoField(primary_key=True)
-    student_usn = models.CharField(max_length = 30)
-    status      = models.BooleanField()
-    branch      = models.CharField(max_length = 30, choices = BRANCH_CHOUCE)
-    division    = models.CharField(max_length = 30, choices = DIVISION_CHOUCE)
-    subject     = models.CharField(max_length = 30, choices = SUBJECT_CHOUCE)
-    sem         = models.IntegerField(choices = SEM_CHOUCE)
-    date        = models.DateField()
+    id              = models.AutoField(primary_key=True)
+    student_usn     = models.CharField(max_length = 30)
+    status          = models.BooleanField()
+    branch          = models.CharField(max_length = 30, choices = BRANCH_CHOUCE)
+    division        = models.CharField(max_length = 30, choices = DIVISION_CHOUCE)
+    subject         = models.CharField(max_length = 30, choices = SUBJECT_CHOUCE)
+    sem             = models.IntegerField(choices = SEM_CHOUCE)
+    date            = models.DateField()
+    previous_hash   = models.CharField(max_length = 255, default='')
+    attendenceBlock = JSONField(null=False, default= {})
     
 
     def __str__(self):
@@ -95,5 +100,6 @@ class StudentAttendenceBlock(models.Model):
     subject         = models.CharField(max_length = 30, choices = SUBJECT_CHOUCE)
     sem             = models.IntegerField(choices = SEM_CHOUCE)
     previous_hash   = models.CharField(max_length = 255, default='')
-    attendenceBlock = models.CharField(max_length = 255, default='')
+    attendenceBlock = JSONField(null=False, default= {})
     date            = models.DateField(auto_now_add = True)
+    

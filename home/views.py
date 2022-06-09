@@ -17,6 +17,7 @@ import csv
 from django.http import HttpResponse
 import pandas as pd
 from twilio.rest import Client
+import random as r
 
 
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
@@ -33,7 +34,6 @@ BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SC
 #                 )
 
 # print(message.sid)
-
 previos_hash1 = StudentAttendenceBlock.objects.all()
 if not previos_hash1:
     previos_hash1 = 10
@@ -41,6 +41,11 @@ else:
     previos_hash1 = StudentAttendenceBlock.objects.all()[::-1][0].previous_hash
 print('previos_hash ===>', previos_hash1)
 Blockchain = _blockchain(prev= previos_hash1)
+
+
+def generate_random_password():
+    password = r.randint(1111111, 2222222)
+    return password
 
 class ForgotPassword(TemplateView):
     template_name = 'forgot_password.html'
@@ -51,21 +56,32 @@ class ForgotPassword(TemplateView):
             if 'faculty' in self.request.POST :
                 faculty = Faculty.objects.filter(phone = phone).first()
                 if faculty:  
-                    user = User.objects.get(last_name = faculty.pk)
-                    user.password = 'password'
-                    send_message(phone, user.username, faculty.first_name)
-                    user.save()
-                    cntext = {'success' : 'Faculty password reset success.'}
+                    user = User.objects.filter(last_name = faculty.pk, first_name = 'faculty').first()
+                    if user:
+                        usr = User.objects.get(username = user.username)
+                        print(user.username,'----------')
+                        reset_password = str(generate_random_password())
+                        print(reset_password,'|||\\\\\\\\')
+                        usr.set_password(reset_password)
+                        usr.save()
+                        context = {'success' : f'Faculty password reset successfully. your username is {user.username} and password is {reset_password}.'}
+                    else:
+                        context = {'error' : 'User is not added please contact admin'}
                 else :
                     context = {'error': 'Please enter valid phone number, provided number is not linked with any faculty'}
             else :
                 student = Student.objects.filter(phone = phone).first()
                 if student:  
-                    user = User.objects.get(last_name = student.pk)
-                    user.password = 'password'
-                    send_message(phone, user.username, student.first_name)
-                    user.save()
-                    cntext = {'success' : 'Student password reset success.'}
+                    user = User.objects.filter(last_name = faculty.pk, first_name = 'student').first()
+                    if user:
+                        usr = User.objects.get(username = user.username)
+                        print(user.username,'----------')
+                        reset_password = str(generate_random_password())
+                        usr.set_password(reset_password)
+                        usr.save()
+                        context = {'success' : f'Student password reset successfully. your username is {user.username} and password is {reset_password}.'}
+                    else:
+                        context = {'error' : 'User is not added please contact admin'}
                 else :
                     context = {'error': 'Please enter valid phone number, provided number is not linked with any student'}
         else : 
@@ -191,18 +207,37 @@ def student_attendence(request):
     else:
         students   = Student.objects.filter(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'])
         # attendence = StudentAttendences.objects.create()
+        '''for stu in students:
+            attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = stu.student_usn in request.POST, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])'''
+        dict1 ={}
         for stu in students:
-            attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = stu.student_usn in request.POST, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'])
+            if not Blockchain.is_chain_valid():
+                print('Block is not valid')
+            else :
+                block = Blockchain.mine_block(data= {stu.student_usn : stu.student_usn in request.POST} )
+                print('block ===>',block)
+                print("block is valid")
+                attendence = StudentAttendences.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], status = stu.student_usn in request.POST, student_usn = stu.student_usn, subject = request.session['subject'], date = request.session['sdate'], previous_hash = block["previous_hash"], attendenceBlock = block)
+                dict1[stu.student_usn]=stu.student_usn in request.POST
+        
+        print(dict1)
+        if not Blockchain.is_chain_valid():
+                print('Block is not valid')
+        else :
+            block = Blockchain.mine_block(data= dict1)
+            print('block ===>',block)
+            print("block is valid")
+            attendence =StudentAttendenceBlock.objects.create(branch = request.session['branch'], division = request.session['division'], sem = request.session['sem'], previous_hash = block["previous_hash"], attendenceBlock = block, subject = request.session['subject'])
 
         ## Blockchain
-        if not Blockchain.is_chain_valid():
+        ''' if not Blockchain.is_chain_valid():
             print('Block is not valid')
         else :
             block = Blockchain.mine_block(data= str(request.POST) )
             print('block ===>',block)
-            print("Block is valid")
+            print("Block is valid") '''
 
-        return redirect('students1')
+        return redirect('students1') 
 
 # SUBJECTS = {'M1' : 'M1', 'M2' : 'M2', 'ENGLISH' : 'ENGLISH', 'BEEE' : 'BEEE', 'SCIENCE' : 'SCIENCE'}
 
@@ -222,7 +257,8 @@ class StudentDetails(DetailView):
             final_attendence[subject] = {'percentage' : 0}
         # calculate attendence
         for attendence in student_all_att:
-            if attendence.status:
+            # if attendence.status:
+            if attendence.attendenceBlock['data'][student_usn]:# fetching data from blockchain
                 student_attendence[attendence.subject]['present'] += (1 + 0)
             else:
                 student_attendence[attendence.subject]['absent'] += (1 + 0)

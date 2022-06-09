@@ -45,7 +45,7 @@ class Blockchain:
     def _to_digest(
         self, new_proof: int, previous_proof: int, index: int, data
     ) -> bytes:
-        to_digest = str(new_proof ** 2 - previous_proof ** 2 + index) + data
+        to_digest = str(new_proof ** 2 - previous_proof ** 2 + index) 
         # It returns an utf-8 encoded version of the string
         return to_digest.encode()
 
