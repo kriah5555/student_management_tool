@@ -48,50 +48,50 @@
 
   <form class="form-inline" role="form"  method = 'POST'> {% csrf_token %}
 	<center>
-  <h1 style="margin-bottom: 30px;">Student Attendence Overview</h1>	
+  <h1 style="margin-bottom: 30px;">Student Attendence Overview</h1>		
   <div class="form-group">
 		<label class="filter-col" style="margin-right:0;" for="pref-orderby">Subject:</label>
-		<select id="pref-orderby" class="form-control" name='subject' value = "{{ subject }}">
-			<option value='SCIENCE'>Science</option>
-			<option value='ENGLISH'>English</option>
-			<option value='BEEE'>BEEE</option>
-			<option value='M2'>M2</option>
-			<option value='M1'>M1</option>
+		<select id="pref-orderby" class="form-control" name='subject' >
+			<option value='SCIENCE' {% if subject == 'SCIENCE' %} selected {% endif %}>Science</option>
+			<option value='ENGLISH' {% if subject == 'ENGLISH' %} selected {% endif %}>English</option>
+			<option value='BEEE' {% if subject == 'BEEE' %} selected {% endif %}>BEEE</option>
+			<option value='M2' {% if subject == 'M2' %} selected {% endif %}>M2</option>
+			<option value='M1' {% if subject == 'M1' %} selected {% endif %}>M1</option>
 		</select>                                
 	</div>
 	<div class="form-group">
 		<label class="filter-col" style="margin-right:0;" for="pref-orderby">Sem:</label>
 		<select id="pref-orderby" class="form-control" name='sem' value = "{{ sem }}">
-			<option value=1>1</option>
-			<option value=2>2</option>
-			<option value=3>3</option>
-			<option value=4>4</option>
-			<option value=5>5</option>
-			<option value=6>6</option>
-			<option value=7>7</option>
-			<option value=8>8</option>
+			<option value=1 {% if sem == 1 %} selected {% endif %}>1</option>
+			<option value=2 {% if sem == 2 %} selected {% endif %}>2</option>
+			<option value=3 {% if sem == 3 %} selected {% endif %}>3</option>
+			<option value=4 {% if sem == 4 %} selected {% endif %}>4</option>
+			<option value=5 {% if sem == 5 %} selected {% endif %}>5</option>
+			<option value=6 {% if sem == 6 %} selected {% endif %}>6</option>
+			<option value=7 {% if sem == 7 %} selected {% endif %}>7</option>
+			<option value=8 {% if sem == 8 %} selected {% endif %}>8</option>
 		</select>                                
 	</div>
 	<div class="form-group">
 		<label class="filter-col" style="margin-right:0;" for="pref-orderby">Branch:</label>
 		<select id="pref-orderby" class="form-control" name="branch" value = "{{ branch }}">
-			<option value='E & C'>E & C</option>
-			<option value='MECHANICAL'>MECHANICAL</option>
-			<option value='COMPUTER SCIENCE'>COMPUTER SCIENCE</option>
+			<option value='E & C' {% if branch == 'E & C' %} selected {% endif %}>E & C</option>
+			<option value='MECHANICAL' {% if branch == 'MECHANICAL' %} selected {% endif %}>MECHANICAL</option>
+			<option value='COMPUTER SCIENCE' {% if branch == 'COMPUTER SCIENCE' %} selected {% endif %}>COMPUTER SCIENCE</option>
 			<option>M2</option>
 		</select>                                
 	</div>
 	<div class="form-group">
 		<label class="filter-col" style="margin-right:0;" for="pref-orderby">Division:</label>
 		<select id="pref-orderby" class="form-control" name="division" value="{{ division }}">
-			<option value="A">A</option>
-			<option value="B">B</option>
-			<option value="c">C</option>
+			<option value="A" {% if division == 'A' %} selected {% endif %}>A</option>
+			<option value="B" {% if division == 'B' %} selected {% endif %}>B</option>
+			<option value="c" {% if division == 'C' %} selected {% endif %}>C</option>
 		</select>                                
 	</div> <!-- form group [order by] --> 
 	<div class="form-group">    
 		<div class="checkbox" style="margin-left:10px; margin-right:10px;">
-			<label for="birthday">Date:</label>
+			<label for="birthday">Date: {{ date1|date:"SHORT_DATE_FORMAT" }}</label>
 			<input type="date" id="birthday" name="date" required value="{{ date }}">
 			{% comment %} <label for="birthday">Start time:</label>
 			<input type="time" id="birthday" name="stime">

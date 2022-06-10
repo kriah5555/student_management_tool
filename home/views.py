@@ -233,7 +233,8 @@ def student_attendence(request):
             print('block ===>',block)
             print("Block is valid") '''
 
-        return redirect('students1') 
+        return redirect('attendence_overview') 
+        # return redirect('students1') 
 
 # SUBJECTS = {'M1' : 'M1', 'M2' : 'M2', 'ENGLISH' : 'ENGLISH', 'BEEE' : 'BEEE', 'SCIENCE' : 'SCIENCE'}
 
@@ -477,10 +478,7 @@ def lgout(request):
 def attendence_overview(request):
 
     template_name = 'attendence_overview.html'
-    print(request.method,'--------')
     if request.method == 'POST':
-        print('=========')
-
         subject          = request.POST['subject']
         sem              = request.POST['sem']
         branch           = request.POST['branch']
@@ -498,14 +496,41 @@ def attendence_overview(request):
                 final_attendence.append([usn, 'Present' if status else 'Absent', name, image])
         print(final_attendence)
         context = {
-            'subject'  : subject,
-            'sem'      : sem,
-            'branch'   : branch,
-            'division' : division,
-            'date'     : date,
+            'subject'    : subject,
+            'sem'        : sem,
+            'branch'     : branch,
+            'division'   : division,
+            'date'       : date,
             'attendence' : final_attendence,
         }  
     else :
-        context = {} 
+        # print(request.META.HTTP_REFERER,'---------========-***')
+        attendence       = StudentAttendenceBlock.objects.all().last()
+        if attendence:
+            print(attendence,'===')
+            subject          = attendence.subject
+            sem              = attendence.sem
+            branch           = attendence.branch
+            division         = attendence.division
+            date             = attendence.date
+            final_attendence = []
+            attendence       = attendence.attendenceBlock['data']
+            for usn, status in attendence.items():
+                student = Student.objects.filter(student_usn = usn).first()
+                image = student.image
+                name  = f'{student.first_name} {student.last_name}'
+                final_attendence.append([usn, 'Present' if status else 'Absent', name, image])
+            context = {
+                'subject'    : subject,
+                'sem'        : sem,
+                'branch'     : branch,
+                'division'   : division,
+                'date1'       : date,
+                'attendence' : final_attendence,
+            }  
+            print(context)
+        else :
+            context = {}
     return render(request, template_name, context)
+    
     
