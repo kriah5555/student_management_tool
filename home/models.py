@@ -24,6 +24,7 @@ PHONE           = (('8197424203', '8197424203'), ('8747972557', '8747972557'), (
 
 class Faculty(models.Model):
     fid             = models.AutoField(primary_key=True)
+    user_id         = models.CharField(max_length = 30, default='')
     first_name      = models.CharField(max_length = 30, default='')
     last_name       = models.CharField(max_length = 30, default='')
     image           = models.ImageField(upload_to='faculties/', null = True, blank = True)
@@ -35,7 +36,7 @@ class Faculty(models.Model):
     branch          = models.CharField(max_length = 30,  choices = BRANCH_CHOUCE)
     created_date    = models.DateField(auto_now_add = True)
     status          = models.BooleanField(default = 0)
-    phone           = models.CharField(choices = PHONE, max_length = 30, default = '')
+    phone           = models.CharField( max_length = 30, default = '')
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
@@ -49,6 +50,7 @@ class Faculty(models.Model):
 
 class Student(models.Model):
     usn             = models.AutoField(primary_key=True)
+    user_id         = models.CharField(max_length = 30, default='')
     student_usn     = models.CharField(max_length = 30, unique = True)
     first_name      = models.CharField(max_length = 30, default='')
     last_name       = models.CharField(max_length = 30, default='')
@@ -62,7 +64,7 @@ class Student(models.Model):
     sem             = models.IntegerField(choices = SEM_CHOUCE)
     created_date    = models.DateField(auto_now_add = True)
     status          = models.BooleanField(default = 0)
-    phone           = models.CharField(choices = PHONE, max_length = 30, default = '')
+    phone           = models.CharField(max_length = 30, default = '')
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

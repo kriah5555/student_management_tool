@@ -51,10 +51,10 @@ class ForgotPassword(TemplateView):
     template_name = 'forgot_password.html'
     def post(self, request):
         #faculty forgot password
-        phone = self.request.POST['phone']
-        if phone :# if valid phone number
+        user_id = self.request.POST['phone']
+        if user_id :# if valid phone number
             if 'faculty' in self.request.POST :
-                faculty = Faculty.objects.filter(phone = phone).first()
+                faculty = Faculty.objects.filter(user_id = user_id).first()
                 if faculty:  
                     user = User.objects.filter(last_name = faculty.pk, first_name = 'faculty').first()
                     if user:
@@ -70,9 +70,9 @@ class ForgotPassword(TemplateView):
                 else :
                     context = {'error': 'Please enter valid phone number, provided number is not linked with any faculty'}
             else :
-                student = Student.objects.filter(phone = phone).first()
+                student = Student.objects.filter(user_id= user_id).first()
                 if student:  
-                    user = User.objects.filter(last_name = faculty.pk, first_name = 'student').first()
+                    user = User.objects.filter(last_name = student.pk, first_name = 'student').first()
                     if user:
                         usr = User.objects.get(username = user.username)
                         print(user.username,'----------')
@@ -135,7 +135,7 @@ class RegisterStudentPage(CreateView):
 class UpdateStudent(UpdateView):
     template_name = "register.html"
     model         = Student
-    fields        = ['student_usn', 'first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'division', 'sem', 'image', ]
+    fields        = ['student_usn', 'first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'division', 'sem', 'image', 'phone']
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
@@ -166,10 +166,20 @@ class FacultiesPage(ListView):
 class StudentList(ListView):
     model         = Student
     template_name = "students.html"
+    
+  
+
+
 
 class StudentLis1t1(ListView):
     model         = Student
     template_name = "students1.html"
+    
+    def get_queryset(self, **kwargs):
+       qs = super().get_queryset(**kwargs)
+       faculty_id         = self.request.user.last_name
+       faculty_branch     = Faculty.objects.get(pk = faculty_id).branch
+       return qs.filter(branch = faculty_branch)    
 
 class StudentAttendenceCredentials(TemplateView):
     template_name = "select_attendence_credentials.html"
@@ -338,7 +348,7 @@ class RegisterPage(CreateView):
 class UpdateFaculty(UpdateView):
     template_name = "register.html"
     model         = Faculty
-    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image', 'degree',]
+    fields        = ['first_name', 'last_name', 'date_of_birth', 'date_of_joining', 'email', 'gender', 'branch', 'image', 'degree', 'phone',]
 
     def get_context_data(self, **kwargs):
         context               = super().get_context_data(**kwargs)
@@ -449,6 +459,7 @@ def create_user(request, pk):
                     user.save()
                     # faculty = Faculty.objects.get(pk = pk)
                     faculty.status = True
+                    faculty.user_id = username
                     faculty.save()
                     messages.success(request, 'User created successfully')
                 elif not username:
