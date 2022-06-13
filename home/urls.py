@@ -31,5 +31,6 @@ urlpatterns = [
     path('forgot_password/', ForgotPassword.as_view(), name = 'forgot_password'),
     path('download_student_attendence/<int:pk>', v.download_student_details, name = 'download_student_attendence'),
     path('attendence_overview/', attendence_overview, name = 'attendence_overview'),
+    path('send_message/<int:pk>', send_message, name = 'send_message'),
 ]
 

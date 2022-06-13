@@ -42,6 +42,9 @@
                                     <h6>
                                         Student
                                     </h6>
+                                    <h6>
+                                        <a href="{% url 'send_message' student.pk %}">Click here to send alert message</a>
+                                    </h6>
                                     <!-- <p class="proile-rating">Total attendence : <span>{{ total_attendence }}/100</span></p> -->
                                     <!-- <a href="{% url 'download_student_attendence' student.pk %}">View atendence</a> -->
                             {% comment %} <ul class="nav nav-tabs" id="myTab" role="tablist">

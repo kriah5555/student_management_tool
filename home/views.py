@@ -29,7 +29,7 @@ BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SC
 # client = Client(account_sid, auth_token)
 # message = client.messages.create(
 #                 body="Hiii",
-#                 to="+919380432761",
+#                 to="+919989168736",
 #                 from_="+19895751647",
 #                 )
 
@@ -88,19 +88,20 @@ class ForgotPassword(TemplateView):
             context = {'error': 'Please enter valid phone number'}
         return render(request, self.template_name, context)
 
-def send_message(number, uid, name):
-    account_sid = "ACff469b87e19877056d4b9514ca71a508"
-    auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
+def send_message(request, pk):
+    student = Student.objects.filter(pk = pk).first()
+    account_sid = "ACeb7fb22b76aca501ac5ae75257440142"
+    auth_token  = "56ae735cda1a4b536b23a82903f92d1c"
     client  = Client(account_sid, auth_token)
-    message = f"Hi {name} your new password is 'password' and  user id is : {uid}"
-    number  =  f"+91{number}"
-    print(message, number, '-------------------')
+    message = f"Hi {student.first_name} your new password is 'password' and  user id is "
+    print(message, '-------------------')
     message = client.messages.create(
                 body  = message,
-                to    = number,
-                from_ ="+19895751647",
+                to    = "+919380432761",
+                from_ = "+19895751647",
     )
     print(message.sid, 'Message sent!!!!!!!')
+    return redirect('faculties')
 
 class HomPage(TemplateView):
     template_name = "home1.html"
@@ -395,7 +396,6 @@ def login_page(request):
         if request.method == 'GET':
             template_name = "login.html"
         elif (request.method == 'POST'):
-
             if (request.path == '/login_admin/'):
                 first_name = ''
                 next       = '/faculties/'
