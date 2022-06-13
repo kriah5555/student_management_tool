@@ -21,8 +21,10 @@ import random as r
 
 
 BRANCH_CHOUCE   = (('E & C','E & C'), ('MECHANICAL','MECHANICAL'), ('COMPUTER SCIENCE','COMPUTER SCIENCE'))
-
-
+ACCOUNT_SID = "ACff469b87e19877056d4b9514ca71a508"
+AUTH_TOKEN  = "e843a873ec888d0933ba92b19fbbc06b"
+FROM        = "+19895751647"
+TO          = "+919380432761"
 
 # account_sid = "ACff469b87e19877056d4b9514ca71a508"
 # auth_token  = "a1178b5405d1d781b2463cacfd1d2b73"
@@ -88,20 +90,58 @@ class ForgotPassword(TemplateView):
             context = {'error': 'Please enter valid phone number'}
         return render(request, self.template_name, context)
 
-def send_message(request, pk):
-    student = Student.objects.filter(pk = pk).first()
-    account_sid = "ACeb7fb22b76aca501ac5ae75257440142"
-    auth_token  = "56ae735cda1a4b536b23a82903f92d1c"
-    client  = Client(account_sid, auth_token)
-    message = f"Hi {student.first_name} your new password is 'password' and  user id is "
-    print(message, '-------------------')
+def _send_message(message):
+    client  = Client(ACCOUNT_SID, AUTH_TOKEN)
     message = client.messages.create(
                 body  = message,
-                to    = "+919380432761",
-                from_ = "+19895751647",
+                to    = TO,
+                from_ = FROM,
     )
-    print(message.sid, 'Message sent!!!!!!!')
-    return redirect('faculties')
+    return
+
+def send_message(request, pk):
+    student_id = pk
+    student = Student.objects.filter(usn = student_id).first()
+    student_usn = student.student_usn
+    student_name = f"{student.first_name} {student.last_name}"
+    student_all_att = StudentAttendences.objects.filter(student_usn = student_usn)
+    student_attendence = dict()
+    final_attendence   = dict()
+    # initilize all subjects with 0 calaulation
+    for subject, s in SUBJECT_CHOUCE:
+        student_attendence[subject] = {'present' : 0, 'absent' : 0,'total' : 0}
+        final_attendence[subject] = {'percentage' : 0}
+    # calculate attendence
+    for attendence in student_all_att:
+        # if attendence.status:
+        if attendence.attendenceBlock['data'][student_usn]:# fetching data from blockchain
+            student_attendence[attendence.subject]['present'] += (1 + 0)
+        else:
+            student_attendence[attendence.subject]['absent'] += (1 + 0)
+        student_attendence[attendence.subject]['total'] += 1
+
+    # df = pd.DataFrame(student_attendence)
+    # print(df)       
+    for sub, att in student_attendence.items():
+        if att['total'] == 0:
+            final_attendence[sub]['percentage'] = 'no atendence'
+            # final_attendence[sub]['color']      = 'red'
+        else:
+            floa = (att['present'] / att['total']) * 100
+            format_float = "{:.2f}".format(floa)
+            final_attendence[sub]['percentage'] = format_float
+            # if floa >= 75:
+            #     final_attendence[sub]['color']  = 'green'
+            # else:
+            #     final_attendence[sub]['color']  = 'red'
+
+    message = f'student USN = {student_usn}; Student name : {student_name}; '
+    for sub, attendence  in final_attendence.items():
+        message = f"{message} {sub} : {attendence['percentage']}%; "
+    _send_message(message)
+
+    return redirect('students1')
+
 
 class HomPage(TemplateView):
     template_name = "home1.html"
